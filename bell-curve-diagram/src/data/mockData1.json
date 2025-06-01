@@ -1,0 +1,139 @@
+{
+  "Ideation": {
+    "icon": "https://topcoder.com/Ideation-icon.png",
+    "color": "#F9C500",
+    "textColor": "#000000",
+    "items": [
+      {
+        "title": "Design",
+        "toolTipTitle": "Design",
+        "toolTipText": "Planning the overall design direction."
+      },
+      {
+        "title": "Technical Approach",
+        "toolTipTitle": "Technical Approach",
+        "toolTipText": "Defining technical methodologies."
+      },
+      {
+        "title": "Technical Architecture",
+        "toolTipTitle": "Technical Architecture",
+        "toolTipText": "Structuring system architecture."
+      },
+      {
+        "title": "Technical Stack",
+        "toolTipTitle": "Technical Stack",
+        "toolTipText": "Selecting technologies for implementation."
+      }
+    ]
+  },
+ "Design": {
+    "icon": "https://topcoder.com/Design-icon.png",
+    "color": "#D69A63",
+    "textColor": "#000000",
+    "items": [
+      { "title": "UI/UX", "toolTipTitle": "UI/UX", "toolTipText": "User experience and interface design." },
+      { "title": "Rapid UX", "toolTipTitle": "Rapid UX", "toolTipText": "Fast prototyping and quick iteration cycles." },
+      { "title": "Concepts", "toolTipTitle": "Concepts", "toolTipText": "High-level creative and technical concepts." },
+      { "title": "Wireframes", "toolTipTitle": "Wireframes", "toolTipText": "Initial layout design blueprints." },
+      { "title": "Design Systems", "toolTipTitle": "Design Systems", "toolTipText": "Reusable UI components and design standards." },
+      { "title": "Digital Style Guides", "toolTipTitle": "Digital Style Guides", "toolTipText": "Brand-aligned digital design guidelines." }
+    ]
+  },
+ "POCs": {
+  "icon": "https://topcoder.com/POC-icon.png",
+  "color": "#D74C3F",
+  "textColor": "#000000",
+  "items": [
+    { "title": "Minimum Viable Products", "toolTipTitle": "Minimum Viable Products", "toolTipText": "Building MVPs to validate market needs quickly." },
+    { "title": "Rapid Prototypes", "toolTipTitle": "Rapid Prototypes", "toolTipText": "Quickly creating functional prototypes." },
+    { "title": "Clickable Prototypes", "toolTipTitle": "Clickable Prototypes", "toolTipText": "Interactive prototypes for user testing." }
+  ]
+},
+ "App Dev": {
+  "icon": "https://topcoder.com/AppDev-icon.png",
+  "color": "#C4304C",
+  "textColor": "#000000",
+  "items": [
+    { "title": "AI", "toolTipTitle": "AI", "toolTipText": "AI-powered application capabilities." },
+    { "title": "IoT", "toolTipTitle": "IoT", "toolTipText": "Internet of Things integrations." },
+    { "title": "AR / VR", "toolTipTitle": "AR / VR", "toolTipText": "Augmented and virtual reality solutions." },
+    { "title": "Blockchain", "toolTipTitle": "Blockchain", "toolTipText": "Distributed ledger technologies." },
+    { "title": "Web Apps", "toolTipTitle": "Web Apps", "toolTipText": "Modern responsive web applications." },
+    { "title": "Mobile Apps", "toolTipTitle": "Mobile Apps", "toolTipText": "Native and hybrid mobile app development." },
+    { "title": "Modernization", "toolTipTitle": "Modernization", "toolTipText": "Legacy system modernization." },
+    { "title": "Responsive Apps", "toolTipTitle": "Responsive Apps", "toolTipText": "Device-independent responsive apps." }
+  ]
+},
+  "APIs": {
+  "icon": "https://topcoder.com/APIs-icon.png",
+  "color": "#D07F80",
+  "textColor": "#000000",
+  "items": [
+    { "title": "Mock APIs", "toolTipTitle": "Mock APIs", "toolTipText": "Simulated APIs for early development." },
+    { "title": "REST APIs", "toolTipTitle": "REST APIs", "toolTipText": "Standard RESTful API development." },
+    { "title": "SOAP APIs", "toolTipTitle": "SOAP APIs", "toolTipText": "Legacy SOAP web services." },
+    { "title": "Web Services", "toolTipTitle": "Web Services", "toolTipText": "Generic web services integration." },
+    { "title": "Micro Services", "toolTipTitle": "Micro Services", "toolTipText": "Decoupled service-oriented architecture." },
+    { "title": "JSON Structure", "toolTipTitle": "JSON Structure", "toolTipText": "Consistent JSON data formatting." },
+    { "title": "Data Connectors", "toolTipTitle": "Data Connectors", "toolTipText": "Bridging multiple data sources." },
+    { "title": "Spring Boot APIs", "toolTipTitle": "Spring Boot APIs", "toolTipText": "Spring Boot microservice APIs." }
+  ]
+},
+  "Testing": {
+  "icon": "https://topcoder.com/Testing-icon.png",
+  "color": "#53E5BA",
+  "textColor": "#000000",
+  "items": [
+    { "title": "API Testing", "toolTipTitle": "API Testing", "toolTipText": "Testing APIs for functionality and performance." },
+    { "title": "UX Testing", "toolTipTitle": "UX Testing", "toolTipText": "Validating user experience and interface usability." },
+    { "title": "Unit Testing", "toolTipTitle": "Unit Testing", "toolTipText": "Component-level testing for stability." },
+    { "title": "Monkey Testing", "toolTipTitle": "Monkey Testing", "toolTipText": "Random input testing to break the system." },
+    { "title": "Usability Testing", "toolTipTitle": "Usability Testing", "toolTipText": "Real-world scenario testing for user interactions." },
+    { "title": "Test Case Creation", "toolTipTitle": "Test Case Creation", "toolTipText": "Authoring comprehensive test cases." },
+    { "title": "Real World Testing", "toolTipTitle": "Real World Testing", "toolTipText": "Simulating real-world use cases." },
+    { "title": "Exploratory Testing", "toolTipTitle": "Exploratory Testing", "toolTipText": "Ad-hoc testing without pre-defined cases." },
+    { "title": "Accessibility Testing", "toolTipTitle": "Accessibility Testing", "toolTipText": "Testing for compliance with accessibility standards." },
+    { "title": "Unstructured Testing", "toolTipTitle": "Unstructured Testing", "toolTipText": "Informal, non-scripted testing." }
+  ]
+},
+ "Dashboards & Visualizations": {
+  "icon": "https://topcoder.com/Dashboard-icon.png",
+  "color": "#29D3EC",
+  "textColor": "#000000",
+  "items": [
+    { "title": "PowerBI, Tableau, Qlick, and more", "toolTipTitle": "PowerBI, Tableau, Qlick, and more", "toolTipText": "BI platform expertise across multiple tools." },
+    { "title": "New Dashboard", "toolTipTitle": "New Dashboard", "toolTipText": "Building new business dashboards from scratch." },
+    { "title": "Improve/Redesign Existing Dashboard", "toolTipTitle": "Improve/Redesign Existing Dashboard", "toolTipText": "Enhancing existing dashboards for better usability." }
+  ]
+},
+ "Data Science": {
+  "icon": "https://topcoder.com/DataScience-icon.png",
+  "color": "#1CB1E8",
+  "textColor": "#000000",
+  "items": [
+    { "title": "Prediction and Forecasting", "toolTipTitle": "Prediction and Forecasting", "toolTipText": "Forecasting future outcomes based on historical data." },
+    { "title": "Computer Vision", "toolTipTitle": "Computer Vision", "toolTipText": "Extracting insights from image and video data." },
+    { "title": "Data Engineering", "toolTipTitle": "Data Engineering", "toolTipText": "Building scalable data pipelines and architectures." },
+    { "title": "Natural Language Processing (NLP)", "toolTipTitle": "Natural Language Processing (NLP)", "toolTipText": "Text analytics and language understanding." },
+    { "title": "Machine Learning", "toolTipTitle": "Machine Learning", "toolTipText": "Training models to learn from data." },
+    { "title": "Optimization Problems", "toolTipTitle": "Optimization Problems", "toolTipText": "Solving complex mathematical optimization challenges." },
+    { "title": "Reinforcement Learning", "toolTipTitle": "Reinforcement Learning", "toolTipText": "Decision-making models through environment feedback." },
+    { "title": "Time Series and Signal Analysis", "toolTipTitle": "Time Series and Signal Analysis", "toolTipText": "Analyzing sequential data streams." }
+  ]
+},
+"AI": {
+  "icon": "https://topcoder.com/AI-icon.png",
+  "color": "#1655B3",
+  "textColor": "#000000",
+  "items": [
+    { "title": "LLM Testing", "toolTipTitle": "LLM Testing", "toolTipText": "Evaluation and validation of large language models." },
+    { "title": "Model Training", "toolTipTitle": "Model Training", "toolTipText": "Training AI/ML models on custom datasets." },
+    { "title": "Agent Creation", "toolTipTitle": "Agent Creation", "toolTipText": "Building autonomous AI agents." },
+    { "title": "Synthetic Users", "toolTipTitle": "Synthetic Users", "toolTipText": "Simulated user generation for AI testing." },
+    { "title": "LLM Optimization", "toolTipTitle": "LLM Optimization", "toolTipText": "Performance tuning of large language models." },
+    { "title": "Agentic Workflows", "toolTipTitle": "Agentic Workflows", "toolTipText": "AI-driven multi-agent collaboration systems." },
+    { "title": "Domain Use Case Exploration", "toolTipTitle": "Domain Use Case Exploration", "toolTipText": "Identifying AI applications for specific industries." }
+  ]
+}
+
+}

@@ -5,14 +5,50 @@
     "textColor": "#000000",
     "items": [
       {
-        "title": "Technical Approach",
-        "toolTipTitle": "Ideation & Planning",
-        "toolTipText": "Identify technical approach, architecture and stack for project success.",
+        "title": "Design",
+        "toolTipTitle": "Design",
+        "toolTipText": "Planning the overall design direction.",
         "links": [
           {
-            "text": "Read Ideation Case Study",
-            "desc": "Explore how ideation shapes technical architecture.",
-            "url": "https://example.com/ideation"
+            "text": "View Design Approach",
+            "desc": "Detailed overview of design strategy in ideation.",
+            "url": "https://example.com/ideation/design"
+          }
+        ]
+      },
+      {
+        "title": "Technical Approach",
+        "toolTipTitle": "Technical Approach",
+        "toolTipText": "Defining technical methodologies.",
+        "links": [
+          {
+            "text": "View Technical Approach",
+            "desc": "Learn about the technical decision making process.",
+            "url": "https://example.com/ideation/technical-approach"
+          }
+        ]
+      },
+      {
+        "title": "Technical Architecture",
+        "toolTipTitle": "Technical Architecture",
+        "toolTipText": "Structuring system architecture.",
+        "links": [
+          {
+            "text": "View Architecture",
+            "desc": "System architecture documentation.",
+            "url": "https://example.com/ideation/architecture"
+          }
+        ]
+      },
+      {
+        "title": "Technical Stack",
+        "toolTipTitle": "Technical Stack",
+        "toolTipText": "Selecting technologies for implementation.",
+        "links": [
+          {
+            "text": "View Tech Stack",
+            "desc": "Explore selected technologies for implementation.",
+            "url": "https://example.com/ideation/tech-stack"
           }
         ]
       }
@@ -24,14 +60,74 @@
     "textColor": "#000000",
     "items": [
       {
-        "title": "UX/UI Design",
-        "toolTipTitle": "Creative Design Process",
-        "toolTipText": "Crafting user-centric, accessible designs with visual excellence.",
+        "title": "UI/UX",
+        "toolTipTitle": "UI/UX",
+        "toolTipText": "User experience and interface design.",
         "links": [
           {
-            "text": "Explore Design Work",
-            "desc": "See our creative design solutions.",
-            "url": "https://example.com/design"
+            "text": "View UI/UX Samples",
+            "desc": "Portfolio of UI/UX work.",
+            "url": "https://example.com/design/uiux"
+          }
+        ]
+      },
+      {
+        "title": "Rapid UX",
+        "toolTipTitle": "Rapid UX",
+        "toolTipText": "Fast prototyping and quick iteration cycles.",
+        "links": [
+          {
+            "text": "Learn Rapid UX",
+            "desc": "Discover rapid UX techniques.",
+            "url": "https://example.com/design/rapidux"
+          }
+        ]
+      },
+      {
+        "title": "Concepts",
+        "toolTipTitle": "Concepts",
+        "toolTipText": "High-level creative and technical concepts.",
+        "links": [
+          {
+            "text": "View Concepts",
+            "desc": "Sample design concepts.",
+            "url": "https://example.com/design/concepts"
+          }
+        ]
+      },
+      {
+        "title": "Wireframes",
+        "toolTipTitle": "Wireframes",
+        "toolTipText": "Initial layout design blueprints.",
+        "links": [
+          {
+            "text": "View Wireframes",
+            "desc": "Sample wireframe layouts.",
+            "url": "https://example.com/design/wireframes"
+          }
+        ]
+      },
+      {
+        "title": "Design Systems",
+        "toolTipTitle": "Design Systems",
+        "toolTipText": "Reusable UI components and design standards.",
+        "links": [
+          {
+            "text": "View Design Systems",
+            "desc": "Explore our design system components.",
+            "url": "https://example.com/design/systems"
+          }
+        ]
+      },
+      {
+        "title": "Digital Style Guides",
+        "toolTipTitle": "Digital Style Guides",
+        "toolTipText": "Brand-aligned digital design guidelines.",
+        "links": [
+          {
+            "text": "View Style Guides",
+            "desc": "Digital brand style guidelines.",
+            "url": "https://example.com/design/style-guides"
           }
         ]
       }
@@ -39,18 +135,42 @@
   },
   "POCs": {
     "icon": "https://topcoder.com/POC-icon.png",
-    "color": "#D86763",
+    "color": "#D74C3F",
     "textColor": "#000000",
     "items": [
       {
-        "title": "Proof of Concepts",
-        "toolTipTitle": "Rapid Prototyping",
-        "toolTipText": "Quickly prototype and validate technical feasibility.",
+        "title": "Minimum Viable Products",
+        "toolTipTitle": "Minimum Viable Products",
+        "toolTipText": "Building MVPs to validate market needs quickly.",
         "links": [
           {
-            "text": "View POC Success Stories",
-            "desc": "See how we rapidly prototype solutions.",
-            "url": "https://example.com/pocs"
+            "text": "View MVPs",
+            "desc": "Sample MVP deliveries.",
+            "url": "https://example.com/poc/mvp"
+          }
+        ]
+      },
+      {
+        "title": "Rapid Prototypes",
+        "toolTipTitle": "Rapid Prototypes",
+        "toolTipText": "Quickly creating functional prototypes.",
+        "links": [
+          {
+            "text": "View Prototypes",
+            "desc": "Rapid prototype examples.",
+            "url": "https://example.com/poc/prototypes"
+          }
+        ]
+      },
+      {
+        "title": "Clickable Prototypes",
+        "toolTipTitle": "Clickable Prototypes",
+        "toolTipText": "Interactive prototypes for user testing.",
+        "links": [
+          {
+            "text": "Try Clickable Prototype",
+            "desc": "Clickable prototype demos.",
+            "url": "https://example.com/poc/clickable"
           }
         ]
       }
@@ -58,37 +178,205 @@
   },
   "App Dev": {
     "icon": "https://topcoder.com/AppDev-icon.png",
-    "color": "#CD5C7D",
+    "color": "#C4304C",
     "textColor": "#000000",
     "items": [
       {
-        "title": "Application Development",
-        "toolTipTitle": "Enterprise Application Builds",
-        "toolTipText": "Robust scalable application development across industries.",
+        "title": "AI",
+        "toolTipTitle": "AI",
+        "toolTipText": "AI-powered application capabilities.",
         "links": [
           {
-            "text": "Application Portfolio",
-            "desc": "Browse through delivered applications.",
-            "url": "https://example.com/appdev"
+            "text": "Explore AI Apps",
+            "desc": "AI-driven application samples.",
+            "url": "https://example.com/appdev/ai"
+          }
+        ]
+      },
+      {
+        "title": "IoT",
+        "toolTipTitle": "IoT",
+        "toolTipText": "Internet of Things integrations.",
+        "links": [
+          {
+            "text": "View IoT Use Cases",
+            "desc": "Connected device integration samples.",
+            "url": "https://example.com/appdev/iot"
+          }
+        ]
+      },
+      {
+        "title": "AR / VR",
+        "toolTipTitle": "AR / VR",
+        "toolTipText": "Augmented and virtual reality solutions.",
+        "links": [
+          {
+            "text": "AR/VR Demos",
+            "desc": "See AR/VR solutions in action.",
+            "url": "https://example.com/appdev/arvr"
+          }
+        ]
+      },
+      {
+        "title": "Blockchain",
+        "toolTipTitle": "Blockchain",
+        "toolTipText": "Distributed ledger technologies.",
+        "links": [
+          {
+            "text": "View Blockchain",
+            "desc": "Blockchain platform expertise.",
+            "url": "https://example.com/appdev/blockchain"
+          }
+        ]
+      },
+      {
+        "title": "Web Apps",
+        "toolTipTitle": "Web Apps",
+        "toolTipText": "Modern responsive web applications.",
+        "links": [
+          {
+            "text": "Web App Portfolio",
+            "desc": "Web application delivery samples.",
+            "url": "https://example.com/appdev/webapps"
+          }
+        ]
+      },
+      {
+        "title": "Mobile Apps",
+        "toolTipTitle": "Mobile Apps",
+        "toolTipText": "Native and hybrid mobile app development.",
+        "links": [
+          {
+            "text": "View Mobile Apps",
+            "desc": "Cross-platform mobile apps.",
+            "url": "https://example.com/appdev/mobile"
+          }
+        ]
+      },
+      {
+        "title": "Modernization",
+        "toolTipTitle": "Modernization",
+        "toolTipText": "Legacy system modernization.",
+        "links": [
+          {
+            "text": "Modernization Projects",
+            "desc": "System modernization case studies.",
+            "url": "https://example.com/appdev/modernization"
+          }
+        ]
+      },
+      {
+        "title": "Responsive Apps",
+        "toolTipTitle": "Responsive Apps",
+        "toolTipText": "Device-independent responsive apps.",
+        "links": [
+          {
+            "text": "View Responsive Design",
+            "desc": "Responsive app design best practices.",
+            "url": "https://example.com/appdev/responsive"
           }
         ]
       }
     ]
-  },
-  "APIs": {
+  }, 
+   "APIs": {
     "icon": "https://topcoder.com/APIs-icon.png",
-    "color": "#D6A5A3",
+    "color": "#D07F80",
     "textColor": "#000000",
     "items": [
       {
-        "title": "API Development",
-        "toolTipTitle": "Secure API Interfaces",
-        "toolTipText": "Build modern, scalable, secure API integrations.",
+        "title": "Mock APIs",
+        "toolTipTitle": "Mock APIs",
+        "toolTipText": "Simulated APIs for early development.",
         "links": [
           {
-            "text": "API Solutions",
-            "desc": "REST, GraphQL, Microservices expertise.",
-            "url": "https://example.com/apis"
+            "text": "View Mock APIs",
+            "desc": "Explore mock API configurations.",
+            "url": "https://example.com/apis/mock"
+          }
+        ]
+      },
+      {
+        "title": "REST APIs",
+        "toolTipTitle": "REST APIs",
+        "toolTipText": "Standard RESTful API development.",
+        "links": [
+          {
+            "text": "REST API Docs",
+            "desc": "Full REST API documentation.",
+            "url": "https://example.com/apis/rest"
+          }
+        ]
+      },
+      {
+        "title": "SOAP APIs",
+        "toolTipTitle": "SOAP APIs",
+        "toolTipText": "Legacy SOAP web services.",
+        "links": [
+          {
+            "text": "SOAP Services",
+            "desc": "SOAP-based API documentation.",
+            "url": "https://example.com/apis/soap"
+          }
+        ]
+      },
+      {
+        "title": "Web Services",
+        "toolTipTitle": "Web Services",
+        "toolTipText": "Generic web services integration.",
+        "links": [
+          {
+            "text": "Web Services Catalog",
+            "desc": "List of available web services.",
+            "url": "https://example.com/apis/webservices"
+          }
+        ]
+      },
+      {
+        "title": "Micro Services",
+        "toolTipTitle": "Micro Services",
+        "toolTipText": "Decoupled service-oriented architecture.",
+        "links": [
+          {
+            "text": "Microservices Overview",
+            "desc": "Microservices platform samples.",
+            "url": "https://example.com/apis/microservices"
+          }
+        ]
+      },
+      {
+        "title": "JSON Structure",
+        "toolTipTitle": "JSON Structure",
+        "toolTipText": "Consistent JSON data formatting.",
+        "links": [
+          {
+            "text": "JSON Schema Samples",
+            "desc": "View JSON schema examples.",
+            "url": "https://example.com/apis/jsonstructure"
+          }
+        ]
+      },
+      {
+        "title": "Data Connectors",
+        "toolTipTitle": "Data Connectors",
+        "toolTipText": "Bridging multiple data sources.",
+        "links": [
+          {
+            "text": "Data Connector Demos",
+            "desc": "Sample data connectors in action.",
+            "url": "https://example.com/apis/dataconnectors"
+          }
+        ]
+      },
+      {
+        "title": "Spring Boot APIs",
+        "toolTipTitle": "Spring Boot APIs",
+        "toolTipText": "Spring Boot microservice APIs.",
+        "links": [
+          {
+            "text": "Spring Boot Samples",
+            "desc": "Spring Boot API microservices.",
+            "url": "https://example.com/apis/springboot"
           }
         ]
       }
@@ -96,18 +384,126 @@
   },
   "Testing": {
     "icon": "https://topcoder.com/Testing-icon.png",
-    "color": "#85F5CC",
+    "color": "#53E5BA",
     "textColor": "#000000",
     "items": [
       {
-        "title": "QA & Testing",
-        "toolTipTitle": "Quality Assurance",
-        "toolTipText": "Automated and manual testing to ensure product stability.",
+        "title": "API Testing",
+        "toolTipTitle": "API Testing",
+        "toolTipText": "Testing APIs for functionality and performance.",
         "links": [
           {
-            "text": "Testing Platforms",
-            "desc": "Explore our QA frameworks and processes.",
-            "url": "https://example.com/testing"
+            "text": "API Testing Suite",
+            "desc": "Explore automated API testing tools.",
+            "url": "https://example.com/testing/api"
+          }
+        ]
+      },
+      {
+        "title": "UX Testing",
+        "toolTipTitle": "UX Testing",
+        "toolTipText": "Validating user experience and interface usability.",
+        "links": [
+          {
+            "text": "UX Testing Samples",
+            "desc": "User feedback driven UX testing.",
+            "url": "https://example.com/testing/ux"
+          }
+        ]
+      },
+      {
+        "title": "Unit Testing",
+        "toolTipTitle": "Unit Testing",
+        "toolTipText": "Component-level testing for stability.",
+        "links": [
+          {
+            "text": "Unit Test Suites",
+            "desc": "Sample unit test framework coverage.",
+            "url": "https://example.com/testing/unit"
+          }
+        ]
+      },
+      {
+        "title": "Monkey Testing",
+        "toolTipTitle": "Monkey Testing",
+        "toolTipText": "Random input testing to break the system.",
+        "links": [
+          {
+            "text": "Monkey Test Engine",
+            "desc": "Randomized application testing.",
+            "url": "https://example.com/testing/monkey"
+          }
+        ]
+      },
+      {
+        "title": "Usability Testing",
+        "toolTipTitle": "Usability Testing",
+        "toolTipText": "Real-world scenario testing for user interactions.",
+        "links": [
+          {
+            "text": "Usability Reports",
+            "desc": "Real user scenario test reports.",
+            "url": "https://example.com/testing/usability"
+          }
+        ]
+      },
+      {
+        "title": "Test Case Creation",
+        "toolTipTitle": "Test Case Creation",
+        "toolTipText": "Authoring comprehensive test cases.",
+        "links": [
+          {
+            "text": "Test Case Repository",
+            "desc": "Library of automated test cases.",
+            "url": "https://example.com/testing/testcases"
+          }
+        ]
+      },
+      {
+        "title": "Real World Testing",
+        "toolTipTitle": "Real World Testing",
+        "toolTipText": "Simulating real-world use cases.",
+        "links": [
+          {
+            "text": "Real World Tests",
+            "desc": "Industry specific use case tests.",
+            "url": "https://example.com/testing/realworld"
+          }
+        ]
+      },
+      {
+        "title": "Exploratory Testing",
+        "toolTipTitle": "Exploratory Testing",
+        "toolTipText": "Ad-hoc testing without pre-defined cases.",
+        "links": [
+          {
+            "text": "Exploratory Session Logs",
+            "desc": "Free-form testing results.",
+            "url": "https://example.com/testing/exploratory"
+          }
+        ]
+      },
+      {
+        "title": "Accessibility Testing",
+        "toolTipTitle": "Accessibility Testing",
+        "toolTipText": "Testing for compliance with accessibility standards.",
+        "links": [
+          {
+            "text": "Accessibility Compliance",
+            "desc": "WCAG and ADA compliance tests.",
+            "url": "https://example.com/testing/accessibility"
+          }
+        ]
+      },
+      {
+        "title": "Unstructured Testing",
+        "toolTipTitle": "Unstructured Testing",
+        "toolTipText": "Informal, non-scripted testing.",
+        "links": [
+          {
+            "text": "Unstructured Test Scenarios",
+            "desc": "Manual ad-hoc test reports.",
+            "url": "https://example.com/testing/unstructured"
           }
         ]
       }
@@ -115,18 +511,42 @@
   },
   "Dashboards & Visualizations": {
     "icon": "https://topcoder.com/Dashboard-icon.png",
-    "color": "#6CE0E8",
+    "color": "#29D3EC",
     "textColor": "#000000",
     "items": [
       {
-        "title": "Data Visualization",
-        "toolTipTitle": "Dashboards & Reporting",
-        "toolTipText": "Interactive dashboards for actionable insights.",
+        "title": "PowerBI, Tableau, Qlick, and more",
+        "toolTipTitle": "PowerBI, Tableau, Qlick, and more",
+        "toolTipText": "BI platform expertise across multiple tools.",
         "links": [
           {
-            "text": "View Dashboards",
-            "desc": "See live dashboard samples.",
-            "url": "https://example.com/dashboards"
+            "text": "View BI Tools",
+            "desc": "Explore multiple dashboard solutions.",
+            "url": "https://example.com/dashboards/bi"
+          }
+        ]
+      },
+      {
+        "title": "New Dashboard",
+        "toolTipTitle": "New Dashboard",
+        "toolTipText": "Building new business dashboards from scratch.",
+        "links": [
+          {
+            "text": "Create New Dashboard",
+            "desc": "Start new dashboard projects.",
+            "url": "https://example.com/dashboards/new"
+          }
+        ]
+      },
+      {
+        "title": "Improve/Redesign Existing Dashboard",
+        "toolTipTitle": "Improve/Redesign Existing Dashboard",
+        "toolTipText": "Enhancing existing dashboards for better usability.",
+        "links": [
+          {
+            "text": "Redesign Dashboards",
+            "desc": "Dashboard improvement samples.",
+            "url": "https://example.com/dashboards/redesign"
           }
         ]
       }
@@ -134,18 +554,102 @@
   },
   "Data Science": {
     "icon": "https://topcoder.com/DataScience-icon.png",
-    "color": "#4DB7E8",
+    "color": "#1CB1E8",
     "textColor": "#000000",
     "items": [
       {
-        "title": "Data Science Solutions",
-        "toolTipTitle": "Predictive Analytics",
-        "toolTipText": "Data-driven solutions leveraging machine learning models.",
+        "title": "Prediction and Forecasting",
+        "toolTipTitle": "Prediction and Forecasting",
+        "toolTipText": "Forecasting future outcomes based on historical data.",
         "links": [
           {
-            "text": "Data Science Projects",
-            "desc": "Case studies on ML and AI models.",
-            "url": "https://example.com/datascience"
+            "text": "Forecast Models",
+            "desc": "Sample forecasting case studies.",
+            "url": "https://example.com/datascience/forecasting"
+          }
+        ]
+      },
+      {
+        "title": "Computer Vision",
+        "toolTipTitle": "Computer Vision",
+        "toolTipText": "Extracting insights from image and video data.",
+        "links": [
+          {
+            "text": "Computer Vision Demos",
+            "desc": "AI vision model examples.",
+            "url": "https://example.com/datascience/vision"
+          }
+        ]
+      },
+      {
+        "title": "Data Engineering",
+        "toolTipTitle": "Data Engineering",
+        "toolTipText": "Building scalable data pipelines and architectures.",
+        "links": [
+          {
+            "text": "Data Pipelines",
+            "desc": "ETL and data pipeline engineering.",
+            "url": "https://example.com/datascience/engineering"
+          }
+        ]
+      },
+      {
+        "title": "Natural Language Processing (NLP)",
+        "toolTipTitle": "Natural Language Processing (NLP)",
+        "toolTipText": "Text analytics and language understanding.",
+        "links": [
+          {
+            "text": "NLP Samples",
+            "desc": "Text mining & NLP models.",
+            "url": "https://example.com/datascience/nlp"
+          }
+        ]
+      },
+      {
+        "title": "Machine Learning",
+        "toolTipTitle": "Machine Learning",
+        "toolTipText": "Training models to learn from data.",
+        "links": [
+          {
+            "text": "ML Case Studies",
+            "desc": "Machine learning project samples.",
+            "url": "https://example.com/datascience/ml"
+          }
+        ]
+      },
+      {
+        "title": "Optimization Problems",
+        "toolTipTitle": "Optimization Problems",
+        "toolTipText": "Solving complex mathematical optimization challenges.",
+        "links": [
+          {
+            "text": "Optimization Engines",
+            "desc": "Optimization model demos.",
+            "url": "https://example.com/datascience/optimization"
+          }
+        ]
+      },
+      {
+        "title": "Reinforcement Learning",
+        "toolTipTitle": "Reinforcement Learning",
+        "toolTipText": "Decision-making models through environment feedback.",
+        "links": [
+          {
+            "text": "RL Algorithms",
+            "desc": "Reinforcement learning simulations.",
+            "url": "https://example.com/datascience/rl"
+          }
+        ]
+      },
+      {
+        "title": "Time Series and Signal Analysis",
+        "toolTipTitle": "Time Series and Signal Analysis",
+        "toolTipText": "Analyzing sequential data streams.",
+        "links": [
+          {
+            "text": "Time Series Models",
+            "desc": "Signal processing examples.",
+            "url": "https://example.com/datascience/timeseries"
           }
         ]
       }
@@ -153,18 +657,90 @@
   },
   "AI": {
     "icon": "https://topcoder.com/AI-icon.png",
-    "color": "#3B73B3",
+    "color": "#1655B3",
     "textColor": "#000000",
     "items": [
       {
-        "title": "AI Solutions",
-        "toolTipTitle": "Artificial Intelligence",
-        "toolTipText": "Custom AI-powered automation & cognitive solutions.",
+        "title": "LLM Testing",
+        "toolTipTitle": "LLM Testing",
+        "toolTipText": "Evaluation and validation of large language models.",
         "links": [
           {
-            "text": "Explore AI Offerings",
-            "desc": "Deep learning, NLP, computer vision projects.",
-            "url": "https://example.com/ai"
+            "text": "LLM Testing Suite",
+            "desc": "Test LLM models accuracy.",
+            "url": "https://example.com/ai/llmtesting"
+          }
+        ]
+      },
+      {
+        "title": "Model Training",
+        "toolTipTitle": "Model Training",
+        "toolTipText": "Training AI/ML models on custom datasets.",
+        "links": [
+          {
+            "text": "Train Models",
+            "desc": "AI model training pipelines.",
+            "url": "https://example.com/ai/training"
+          }
+        ]
+      },
+      {
+        "title": "Agent Creation",
+        "toolTipTitle": "Agent Creation",
+        "toolTipText": "Building autonomous AI agents.",
+        "links": [
+          {
+            "text": "Create Agents",
+            "desc": "Sample autonomous AI agents.",
+            "url": "https://example.com/ai/agents"
+          }
+        ]
+      },
+      {
+        "title": "Synthetic Users",
+        "toolTipTitle": "Synthetic Users",
+        "toolTipText": "Simulated user generation for AI testing.",
+        "links": [
+          {
+            "text": "Synthetic User Simulation",
+            "desc": "AI driven synthetic user models.",
+            "url": "https://example.com/ai/syntheticusers"
+          }
+        ]
+      },
+      {
+        "title": "LLM Optimization",
+        "toolTipTitle": "LLM Optimization",
+        "toolTipText": "Performance tuning of large language models.",
+        "links": [
+          {
+            "text": "LLM Optimization Samples",
+            "desc": "Improving LLM inference performance.",
+            "url": "https://example.com/ai/optimization"
+          }
+        ]
+      },
+      {
+        "title": "Agentic Workflows",
+        "toolTipTitle": "Agentic Workflows",
+        "toolTipText": "AI-driven multi-agent collaboration systems.",
+        "links": [
+          {
+            "text": "Agentic Workflow Builder",
+            "desc": "Complex multi-agent workflow models.",
+            "url": "https://example.com/ai/agentic"
+          }
+        ]
+      },
+      {
+        "title": "Domain Use Case Exploration",
+        "toolTipTitle": "Domain Use Case Exploration",
+        "toolTipText": "Identifying AI applications for specific industries.",
+        "links": [
+          {
+            "text": "AI Use Case Library",
+            "desc": "Industry AI solution library.",
+            "url": "https://example.com/ai/usecases"
           }
         ]
       }
