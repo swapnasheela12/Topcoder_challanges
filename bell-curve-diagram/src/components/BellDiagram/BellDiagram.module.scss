@@ -1,0 +1,85 @@
+// .container {
+//   position: relative;
+// }
+
+// .tooltip {
+//   pointer-events: none;
+//   position: absolute;
+//   background: #111;
+//   color: #fff;
+//   padding: 1rem;
+//   border-radius: 8px;
+//   max-width: 300px;
+//   z-index: 10;
+//   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  
+//   h4 {
+//     margin: 0;
+//   }
+  
+//   ul {
+//     padding-left: 0;
+//     list-style: none;
+
+//     li {
+//       margin-bottom: 10px;
+//       span {
+//         font-weight: bold;
+//         margin-right: 5px;
+//       }
+//       p {
+//         margin: 0;
+//         font-size: 0.8rem;
+//         color: #ddd;
+//       }
+//     }
+//   }
+// }
+
+
+.container {
+  position: relative;
+  max-width: 1200px;
+  margin: auto;
+  padding: 2rem 1rem;
+
+  svg {
+    background: #f5f5f5;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+}
+
+.tooltip {
+  position: absolute;
+  background: #222;
+  color: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+  max-width: 320px;
+  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  pointer-events: none;
+
+  h4 {
+    margin: 0 0 0.5rem 0;
+  }
+  
+  ul {
+    padding-left: 0;
+    list-style: none;
+
+    li {
+      margin-bottom: 8px;
+      span {
+        font-weight: bold;
+        margin-right: 5px;
+      }
+      p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: #ddd;
+      }
+    }
+  }
+}

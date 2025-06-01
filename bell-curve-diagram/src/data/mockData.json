@@ -1,0 +1,173 @@
+{
+  "Ideation": {
+    "icon": "https://topcoder.com/Ideation-icon.png",
+    "color": "#F9C500",
+    "textColor": "#000000",
+    "items": [
+      {
+        "title": "Technical Approach",
+        "toolTipTitle": "Ideation & Planning",
+        "toolTipText": "Identify technical approach, architecture and stack for project success.",
+        "links": [
+          {
+            "text": "Read Ideation Case Study",
+            "desc": "Explore how ideation shapes technical architecture.",
+            "url": "https://example.com/ideation"
+          }
+        ]
+      }
+    ]
+  },
+  "Design": {
+    "icon": "https://topcoder.com/Design-icon.png",
+    "color": "#D69A63",
+    "textColor": "#000000",
+    "items": [
+      {
+        "title": "UX/UI Design",
+        "toolTipTitle": "Creative Design Process",
+        "toolTipText": "Crafting user-centric, accessible designs with visual excellence.",
+        "links": [
+          {
+            "text": "Explore Design Work",
+            "desc": "See our creative design solutions.",
+            "url": "https://example.com/design"
+          }
+        ]
+      }
+    ]
+  },
+  "POCs": {
+    "icon": "https://topcoder.com/POC-icon.png",
+    "color": "#D86763",
+    "textColor": "#000000",
+    "items": [
+      {
+        "title": "Proof of Concepts",
+        "toolTipTitle": "Rapid Prototyping",
+        "toolTipText": "Quickly prototype and validate technical feasibility.",
+        "links": [
+          {
+            "text": "View POC Success Stories",
+            "desc": "See how we rapidly prototype solutions.",
+            "url": "https://example.com/pocs"
+          }
+        ]
+      }
+    ]
+  },
+  "App Dev": {
+    "icon": "https://topcoder.com/AppDev-icon.png",
+    "color": "#CD5C7D",
+    "textColor": "#000000",
+    "items": [
+      {
+        "title": "Application Development",
+        "toolTipTitle": "Enterprise Application Builds",
+        "toolTipText": "Robust scalable application development across industries.",
+        "links": [
+          {
+            "text": "Application Portfolio",
+            "desc": "Browse through delivered applications.",
+            "url": "https://example.com/appdev"
+          }
+        ]
+      }
+    ]
+  },
+  "APIs": {
+    "icon": "https://topcoder.com/APIs-icon.png",
+    "color": "#D6A5A3",
+    "textColor": "#000000",
+    "items": [
+      {
+        "title": "API Development",
+        "toolTipTitle": "Secure API Interfaces",
+        "toolTipText": "Build modern, scalable, secure API integrations.",
+        "links": [
+          {
+            "text": "API Solutions",
+            "desc": "REST, GraphQL, Microservices expertise.",
+            "url": "https://example.com/apis"
+          }
+        ]
+      }
+    ]
+  },
+  "Testing": {
+    "icon": "https://topcoder.com/Testing-icon.png",
+    "color": "#85F5CC",
+    "textColor": "#000000",
+    "items": [
+      {
+        "title": "QA & Testing",
+        "toolTipTitle": "Quality Assurance",
+        "toolTipText": "Automated and manual testing to ensure product stability.",
+        "links": [
+          {
+            "text": "Testing Platforms",
+            "desc": "Explore our QA frameworks and processes.",
+            "url": "https://example.com/testing"
+          }
+        ]
+      }
+    ]
+  },
+  "Dashboards & Visualizations": {
+    "icon": "https://topcoder.com/Dashboard-icon.png",
+    "color": "#6CE0E8",
+    "textColor": "#000000",
+    "items": [
+      {
+        "title": "Data Visualization",
+        "toolTipTitle": "Dashboards & Reporting",
+        "toolTipText": "Interactive dashboards for actionable insights.",
+        "links": [
+          {
+            "text": "View Dashboards",
+            "desc": "See live dashboard samples.",
+            "url": "https://example.com/dashboards"
+          }
+        ]
+      }
+    ]
+  },
+  "Data Science": {
+    "icon": "https://topcoder.com/DataScience-icon.png",
+    "color": "#4DB7E8",
+    "textColor": "#000000",
+    "items": [
+      {
+        "title": "Data Science Solutions",
+        "toolTipTitle": "Predictive Analytics",
+        "toolTipText": "Data-driven solutions leveraging machine learning models.",
+        "links": [
+          {
+            "text": "Data Science Projects",
+            "desc": "Case studies on ML and AI models.",
+            "url": "https://example.com/datascience"
+          }
+        ]
+      }
+    ]
+  },
+  "AI": {
+    "icon": "https://topcoder.com/AI-icon.png",
+    "color": "#3B73B3",
+    "textColor": "#000000",
+    "items": [
+      {
+        "title": "AI Solutions",
+        "toolTipTitle": "Artificial Intelligence",
+        "toolTipText": "Custom AI-powered automation & cognitive solutions.",
+        "links": [
+          {
+            "text": "Explore AI Offerings",
+            "desc": "Deep learning, NLP, computer vision projects.",
+            "url": "https://example.com/ai"
+          }
+        ]
+      }
+    ]
+  }
+}
