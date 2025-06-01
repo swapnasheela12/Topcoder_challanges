@@ -288,7 +288,7 @@ const BellDiagram: React.FC = () => {
         [x - bellWidth * 0.5, height - bellHeight * 0.1],    // lower outward
         [x - bellWidth * 0.4, height - bellHeight * 0.4],    // mid-left inward
         [x - bellWidth * 0.2, height - bellHeight * 0.7],    // upper-left slope (widened)
-        [x, height - bellHeight * 0.82],                     // top (slightly wider & lower)
+        [x, height - bellHeight * 0.72],                     // top (slightly wider & lower)
         [x + bellWidth * 0.2, height - bellHeight * 0.7],    // upper-right slope (widened)
         [x + bellWidth * 0.4, height - bellHeight * 0.4],    // mid-right inward
         [x + bellWidth * 0.5, height - bellHeight * 0.1],    // lower outward
