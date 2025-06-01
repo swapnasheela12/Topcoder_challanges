@@ -263,7 +263,7 @@ const BellDiagram: React.FC = () => {
     const width = 1000;
     const height = 500;
     const bellWidth = 120;
-    const bellHeight = 300; // SAME HEIGHT FOR ALL BELLS
+    const bellHeight = 400; // SAME HEIGHT FOR ALL BELLS
     const categories = Object.keys(data);
     const total = categories.length;
     const spacing = width / (total + 1);
@@ -273,12 +273,26 @@ const BellDiagram: React.FC = () => {
       const categoryData = data[cat];
       const x = spacing * (i + 1);
 
+      // const bellData = [
+      //   [x - bellWidth, height],
+      //   [x - bellWidth / 2, height - bellHeight],
+      //   [x, height - bellHeight - 50],
+      //   [x + bellWidth / 2, height - bellHeight],
+      //   [x + bellWidth, height],
+      // ];
+
+
+
       const bellData = [
-        [x - bellWidth, height],
-        [x - bellWidth / 2, height - bellHeight],
-        [x, height - bellHeight - 50],
-        [x + bellWidth / 2, height - bellHeight],
-        [x + bellWidth, height],
+        [x - bellWidth * 0.65, height],                      // far left base
+        [x - bellWidth * 0.5, height - bellHeight * 0.1],    // lower outward
+        [x - bellWidth * 0.4, height - bellHeight * 0.4],    // mid-left inward
+        [x - bellWidth * 0.2, height - bellHeight * 0.7],    // upper-left slope (widened)
+        [x, height - bellHeight * 0.82],                     // top (slightly wider & lower)
+        [x + bellWidth * 0.2, height - bellHeight * 0.7],    // upper-right slope (widened)
+        [x + bellWidth * 0.4, height - bellHeight * 0.4],    // mid-right inward
+        [x + bellWidth * 0.5, height - bellHeight * 0.1],    // lower outward
+        [x + bellWidth * 0.65, height]                       // far right base
       ];
 
       const path = d3.line().curve(d3.curveBasis);
@@ -287,7 +301,7 @@ const BellDiagram: React.FC = () => {
       const bellPath = group.append("path")
         .attr("d", path(bellData as [number, number][]))
         .attr("fill", categoryData.color)
-        .attr("fill-opacity", 0.4)  // <-- This makes the color transparent
+        .attr("fill-opacity", 0.6)  // <-- This makes the color transparent
         .attr("stroke", "#fff")
         .attr("stroke-width", 2)
         .attr("opacity", 0)
