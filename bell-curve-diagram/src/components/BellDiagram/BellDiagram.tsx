@@ -216,6 +216,41 @@ import React, { useEffect, useRef } from 'react';
 import mockData from '../../data/mockData.json';
 import styles from './BellDiagram.module.scss';
 
+// ✅ Add this function OUTSIDE the component
+const wrapText = (textElement: d3.Selection<SVGTextElement, unknown, null, undefined>, text: string, width: number) => {
+  const words = text.split(/\s+/);
+  let line: string[] = [];
+  let lineNumber = 0;
+  const lineHeight = 1.1;
+
+  const y = +textElement.attr("y");
+  const x = +textElement.attr("x");
+  const dy = 0;
+
+  textElement.text(null);
+
+  let tspan = textElement.append("tspan")
+    .attr("x", x)
+    .attr("y", y)
+    .attr("dy", `${dy}em`);
+
+  for (let i = 0; i < words.length; i++) {
+    line.push(words[i]);
+    tspan.text(line.join(" "));
+
+    if (tspan.node()!.getComputedTextLength() > width) {
+      line.pop();
+      tspan.text(line.join(" "));
+      line = [words[i]];
+      tspan = textElement.append("tspan")
+        .attr("x", x)
+        .attr("y", y)
+        .attr("dy", `${++lineNumber * lineHeight}em`)
+        .text(words[i]);
+    }
+  }
+};
+
 const BellDiagram: React.FC = () => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const data: BellData = mockData;
@@ -252,6 +287,7 @@ const BellDiagram: React.FC = () => {
       const bellPath = group.append("path")
         .attr("d", path(bellData as [number, number][]))
         .attr("fill", categoryData.color)
+        .attr("fill-opacity", 0.4)  // <-- This makes the color transparent
         .attr("stroke", "#fff")
         .attr("stroke-width", 2)
         .attr("opacity", 0)
@@ -260,19 +296,23 @@ const BellDiagram: React.FC = () => {
           group.selectAll(".subcategory-text").remove();
 
           const items = categoryData.items;
-          const startY = height - bellHeight - 30 - items.length * 10;
+          const startY = height - bellHeight + 40; // start slightly below top of bell
+          const textX = x - bellWidth / 2 + 10;    // shift inside left of bell
+          const maxTextWidth = bellWidth - 20;     // leave padding on both sides
 
           items.forEach((item, index) => {
-            group.append("text")
+            const textGroup = group.append("text")
               .attr("class", "subcategory-text")
-              .attr("x", x)
-              .attr("y", startY + index * 20)
-              .attr("text-anchor", "middle")
+              .attr("x", textX)
+              .attr("y", startY + index * 40)  // vertical spacing
+              .attr("text-anchor", "start")
               .attr("fill", "#000")
-              .attr("font-size", 14)
-              .text(`• ${item.title}`);
+              .attr("font-size", 14);
+
+            wrapText(textGroup, `• ${item.title}`, maxTextWidth);
           });
         })
+
         .on("mouseout", () => {
           group.selectAll(".subcategory-text").remove();
         });
