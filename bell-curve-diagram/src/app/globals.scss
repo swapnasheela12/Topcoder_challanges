@@ -24,3 +24,34 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+
+/* Nunito */
+@font-face {
+  font-family: 'Nunito';
+  src: url('../../public/fonts/Nunito/static/Nunito-Regular.ttf') format('ttf');
+  font-weight: 400;
+  font-style: normal;
+
+}
+@font-face {
+  font-family: 'Nunito';
+  src: url('../../public/fonts/Nunito/static/Nunito-Bold.ttf') format('ttf');
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Figtree */
+@font-face {
+  font-family: 'Figtree';
+  src: url('../../public/fonts/Figtree/static/Figtree-Regular.ttf') format('ttf');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Figtree';
+  src: url('../../public/fonts/Figtree/static/Figtree-Bold.ttf') format('ttf');
+  font-weight: 700;
+  font-style: normal;
+}
