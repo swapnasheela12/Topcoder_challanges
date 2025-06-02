@@ -1455,6 +1455,220 @@
 // export default BellDiagram;
 
 
+// "use client";
+
+// import * as d3 from "d3";
+
+// import { BellData, Item } from "../../types/BellTypes";
+// import React, { useEffect, useRef, useState } from "react";
+
+// import Tooltip from "./Tooltip";
+// import mockData from "../../data/mockData.json";
+// import styles from "./BellDiagram.module.scss";
+
+// /** Hybrid pre-wrap function to avoid splitting long words poorly */
+// const splitTextIntoLines = (text: string, maxCharsPerLine: number): string[] => {
+//   const words = text.split(/\s+/);
+//   let lines: string[] = [];
+//   let currentLine = "";
+
+//   words.forEach(word => {
+//     if ((currentLine + " " + word).trim().length <= maxCharsPerLine) {
+//       currentLine = (currentLine + " " + word).trim();
+//     } else {
+//       lines.push(currentLine);
+//       currentLine = word;
+//     }
+//   });
+
+//   if (currentLine) lines.push(currentLine);
+//   return lines;
+// };
+
+// /** Final bullet-safe wrapping inside SVG with true width handling */
+// const wrapText = (
+//   textElement: d3.Selection<SVGTextElement, unknown, null, undefined>,
+//   text: string,
+//   width: number
+// ): number => {
+//   const approxCharPerLine = Math.floor(width / 7);  // Width estimation based on font family size
+//   const lines = splitTextIntoLines(text, approxCharPerLine);
+//   const y = +textElement.attr("y");
+//   const x = +textElement.attr("x");
+//   textElement.text(null);
+
+//   lines.forEach((line, idx) => {
+//     textElement.append("tspan")
+//       .attr("x", x)
+//       .attr("y", y)
+//       .attr("dy", `${idx * 1.2}em`)
+//       .text(line);
+//   });
+
+//   return lines.length;
+// };
+
+// /** Bell width shrinkage based on height position */
+// const getAvailableWidthAtY = (y: number, bellW: number, bellH: number) => {
+//   const relativeHeight = Math.abs(y) / bellH;
+//   const widthShrinkFactor = 1 - relativeHeight * 0.6;
+//   return bellW * widthShrinkFactor;
+// };
+
+// const BellDiagram: React.FC = () => {
+//   const svgRef = useRef<SVGSVGElement | null>(null);
+//   const containerRef = useRef<HTMLDivElement>(null);
+//   const data: BellData = mockData;
+
+//   const [tooltip, setTooltip] = useState<{ x: number; y: number; item: Item } | null>(null);
+//   const [isMobile, setIsMobile] = useState<boolean>(false);
+
+//   useEffect(() => {
+//     const handleResize = () => setIsMobile(window.innerWidth < 768);
+//     handleResize();
+//     window.addEventListener("resize", handleResize);
+//     return () => window.removeEventListener("resize", handleResize);
+//   }, []);
+
+//   useEffect(() => {
+//     if (!svgRef.current || !containerRef.current) return;
+
+//     const containerWidth = containerRef.current.clientWidth;
+//     const width = containerWidth;
+//     const height = isMobile ? 400 : 500;
+//     const bellWidth = isMobile ? 90 : 160;
+//     const bellHeight = isMobile ? 280 : 430;
+//     const growFactor = isMobile ? 1.2 : 1.20;
+//     const categories = Object.keys(data);
+//     const spacing = width / (categories.length + 1);
+
+//     const bellLayer = d3.select(svgRef.current).html("").append("g");
+
+//     const createBellData = (bellW: number, bellH: number) => [
+//       [-bellW * 0.65, 0],
+//       [-bellW * 0.5, -bellH * 0.1],
+//       [-bellW * 0.4, -bellH * 0.4],
+//       [-bellW * 0.2, -bellH * 0.7],
+//       [0, -bellH * 0.71],
+//       [bellW * 0.2, -bellH * 0.7],
+//       [bellW * 0.4, -bellH * 0.4],
+//       [bellW * 0.5, -bellH * 0.1],
+//       [bellW * 0.65, 0],
+//     ];
+
+//     categories.forEach((cat, i) => {
+//       const categoryData = data[cat];
+//       const x = spacing * (i + 1);
+//       const group = bellLayer.append("g").attr("transform", `translate(${x}, ${height})`);
+//       const bellData = createBellData(bellWidth, bellHeight);
+
+//       const bellPath = group
+//         .append("path")
+//         .attr("d", d3.line().curve(d3.curveBasis)(bellData as [number, number][]))
+//         .attr("fill", categoryData.color)
+//         .attr("fill-opacity", 0.8)
+//         .attr("stroke", "#fff")
+//         .attr("stroke-width", 2)
+//         .attr("filter", "drop-shadow(0px 0px 0px rgba(0,0,0,0))")
+//         .style("cursor", "pointer")
+//         .attr("opacity", 0);
+
+//       const textGroup = group.append("g").attr("class", "subcategory-text").style("opacity", 0);
+//       const items = categoryData.items;
+
+//       const baseFontSize = isMobile ? 12 : 16;
+//       const maxComfortableItems = isMobile ? 4 : 6;
+//       const scaleFactor = Math.min(1, maxComfortableItems / items.length);
+//       const fontSize = Math.max(baseFontSize * scaleFactor, isMobile ? 10 : 12);
+//       const lineHeight = fontSize * 1.3;
+
+//       // Estimate total lines for vertical centering
+//       let totalLines = 0;
+//       const lineEstimates: number[] = [];
+
+//       items.forEach(item => {
+//         const estLines = Math.ceil(item.title.length / 18);
+//         lineEstimates.push(estLines);
+//         totalLines += estLines;
+//       });
+
+//       const totalHeight = totalLines * lineHeight;
+//       const shiftUp = Math.min(totalLines * (lineHeight * 0.15), bellHeight * 0.1);
+//       let runningY = -bellHeight * 0.68 + (bellHeight - totalHeight) / 2 - shiftUp;
+
+//       items.forEach((item, idx) => {
+//         const text = textGroup
+//           .append("text")
+//           .attr("x", 0)
+//           .attr("y", runningY)
+//           .attr("text-anchor", "middle")
+//           .attr("fill", "#FFFFFF")
+//           .attr("font-size", fontSize)
+//           .attr("font-weight", 400)
+//           .style("font-family", "'Nunito', sans-serif");
+
+//         const availableWidth = getAvailableWidthAtY(runningY, bellWidth - 10, bellHeight);
+//         const linesWrapped = wrapText(text, `• ${item.title}`, availableWidth);
+//         runningY += linesWrapped * lineHeight;
+//       });
+
+//       const labelText = group.append("text")
+//         .attr("x", 0)
+//         .attr("y", -bellHeight * 0.80)
+//         .attr("text-anchor", "middle")
+//         .attr("fill", categoryData.textColor)
+//         .attr("font-size", isMobile ? 12 : 16)
+//         .attr("font-weight", "bold");
+
+//       wrapText(labelText, cat, bellWidth - 10);
+
+//       const growBell = () => {
+//         group.transition().duration(300).attr("transform", `translate(${x}, ${height}) scale(${growFactor})`);
+//         textGroup.transition().duration(300).style("opacity", 1);
+//         bellPath.transition().duration(300).attr("filter", "drop-shadow(4px 4px 8px rgba(0,0,0,0.4))");
+//       };
+
+//       const shrinkBell = () => {
+//         group.transition().duration(300).attr("transform", `translate(${x}, ${height}) scale(1)`);
+//         textGroup.transition().duration(300).style("opacity", 0);
+//         bellPath.transition().duration(300).attr("filter", "drop-shadow(0px 0px 0px rgba(0,0,0,0))");
+//       };
+
+//       group
+//         .on("mouseover", growBell)
+//         .on("mouseout", shrinkBell)
+//         .on("click", (event: any) => {
+//           const [mouseX, mouseY] = d3.pointer(event);
+//           const clickedItem = categoryData.items[0];
+//           setTooltip({ x: mouseX + x, y: mouseY + height, item: clickedItem });
+//         });
+
+//       bellPath.transition().duration(800).attr("opacity", 1);
+//     });
+
+//     d3.select(svgRef.current).attr("width", width).attr("height", height);
+//   }, [data, isMobile]);
+
+//   return (
+//     <div className={styles.container} ref={containerRef}>
+//       <svg ref={svgRef} />
+//       {tooltip && (
+//         <Tooltip
+//           x={tooltip.x}
+//           y={tooltip.y}
+//           item={tooltip.item}
+//           onClose={() => setTooltip(null)}
+//         />
+//       )}
+//     </div>
+//   );
+// };
+
+// export default BellDiagram;
+
+
+
+
 "use client";
 
 import * as d3 from "d3";
@@ -1466,49 +1680,44 @@ import Tooltip from "./Tooltip";
 import mockData from "../../data/mockData.json";
 import styles from "./BellDiagram.module.scss";
 
-/** Hybrid pre-wrap function to avoid splitting long words poorly */
-const splitTextIntoLines = (text: string, maxCharsPerLine: number): string[] => {
-  const words = text.split(/\s+/);
-  let lines: string[] = [];
-  let currentLine = "";
-
-  words.forEach(word => {
-    if ((currentLine + " " + word).trim().length <= maxCharsPerLine) {
-      currentLine = (currentLine + " " + word).trim();
-    } else {
-      lines.push(currentLine);
-      currentLine = word;
-    }
-  });
-
-  if (currentLine) lines.push(currentLine);
-  return lines;
-};
-
-/** Final bullet-safe wrapping inside SVG with true width handling */
+/**
+ * Text wrapping function that returns total lines used
+ */
 const wrapText = (
   textElement: d3.Selection<SVGTextElement, unknown, null, undefined>,
   text: string,
   width: number
 ): number => {
-  const approxCharPerLine = Math.floor(width / 7);  // Width estimation based on font family size
-  const lines = splitTextIntoLines(text, approxCharPerLine);
+  const words = text.split(/\s+/);
+  let line: string[] = [];
+  let lineNumber = 0;
+  const lineHeight = 0.8;
   const y = +textElement.attr("y");
   const x = +textElement.attr("x");
   textElement.text(null);
+  let tspan = textElement.append("tspan").attr("x", x).attr("y", y).attr("dy", `0em`);
 
-  lines.forEach((line, idx) => {
-    textElement.append("tspan")
-      .attr("x", x)
-      .attr("y", y)
-      .attr("dy", `${idx * 1.2}em`)
-      .text(line);
-  });
-
-  return lines.length;
+  for (let i = 0; i < words.length; i++) {
+    line.push(words[i]);
+    tspan.text(line.join(" "));
+    if (tspan.node()!.getComputedTextLength() > width) {
+      line.pop();
+      tspan.text(line.join(" "));
+      line = [words[i]];
+      tspan = textElement
+        .append("tspan")
+        .attr("x", x)
+        .attr("y", y)
+        .attr("dy", `${++lineNumber * lineHeight}em`)
+        .text(words[i]);
+    }
+  }
+  return lineNumber + 1;
 };
 
-/** Bell width shrinkage based on height position */
+/**
+ * Shrinking width near top of bell
+ */
 const getAvailableWidthAtY = (y: number, bellW: number, bellH: number) => {
   const relativeHeight = Math.abs(y) / bellH;
   const widthShrinkFactor = 1 - relativeHeight * 0.6;
@@ -1520,7 +1729,6 @@ const BellDiagram: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const data: BellData = mockData;
 
-  const [tooltip, setTooltip] = useState<{ x: number; y: number; item: Item } | null>(null);
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
   useEffect(() => {
@@ -1538,12 +1746,11 @@ const BellDiagram: React.FC = () => {
     const height = isMobile ? 400 : 500;
     const bellWidth = isMobile ? 90 : 160;
     const bellHeight = isMobile ? 280 : 430;
-    const growFactor = isMobile ? 1.2 : 1.20;
     const categories = Object.keys(data);
     const spacing = width / (categories.length + 1);
+    const zoomScale = isMobile ? 1.25 : 1.25; // ✅ zoom scale only for active bell
 
     const bellLayer = d3.select(svgRef.current).html("").append("g");
-
     const createBellData = (bellW: number, bellH: number) => [
       [-bellW * 0.65, 0],
       [-bellW * 0.5, -bellH * 0.1],
@@ -1556,17 +1763,20 @@ const BellDiagram: React.FC = () => {
       [bellW * 0.65, 0],
     ];
 
+    const groups: d3.Selection<SVGGElement, unknown, null, undefined>[] = [];
+
     categories.forEach((cat, i) => {
       const categoryData = data[cat];
       const x = spacing * (i + 1);
       const group = bellLayer.append("g").attr("transform", `translate(${x}, ${height})`);
-      const bellData = createBellData(bellWidth, bellHeight);
+      groups.push(group);
 
+      const bellData = createBellData(bellWidth, bellHeight);
       const bellPath = group
         .append("path")
         .attr("d", d3.line().curve(d3.curveBasis)(bellData as [number, number][]))
         .attr("fill", categoryData.color)
-        .attr("fill-opacity", 0.8)
+        .attr("fill-opacity", 0.9)
         .attr("stroke", "#fff")
         .attr("stroke-width", 2)
         .attr("filter", "drop-shadow(0px 0px 0px rgba(0,0,0,0))")
@@ -1579,17 +1789,15 @@ const BellDiagram: React.FC = () => {
       const baseFontSize = isMobile ? 12 : 16;
       const maxComfortableItems = isMobile ? 4 : 6;
       const scaleFactor = Math.min(1, maxComfortableItems / items.length);
-      const fontSize = Math.max(baseFontSize * scaleFactor, isMobile ? 10 : 12);
-      const lineHeight = fontSize * 1.3;
+      const fontSize = Math.max(baseFontSize * scaleFactor, isMobile ? 9 : 12);
+      const lineHeight = fontSize * 1.2;
 
-      // Estimate total lines for vertical centering
       let totalLines = 0;
       const lineEstimates: number[] = [];
-
       items.forEach(item => {
-        const estLines = Math.ceil(item.title.length / 18);
-        lineEstimates.push(estLines);
-        totalLines += estLines;
+        const approxLines = Math.ceil(item.title.length / 18);
+        lineEstimates.push(approxLines);
+        totalLines += approxLines;
       });
 
       const totalHeight = totalLines * lineHeight;
@@ -1622,26 +1830,27 @@ const BellDiagram: React.FC = () => {
 
       wrapText(labelText, cat, bellWidth - 10);
 
-      const growBell = () => {
-        group.transition().duration(300).attr("transform", `translate(${x}, ${height}) scale(${growFactor})`);
-        textGroup.transition().duration(300).style("opacity", 1);
-        bellPath.transition().duration(300).attr("filter", "drop-shadow(4px 4px 8px rgba(0,0,0,0.4))");
-      };
-
-      const shrinkBell = () => {
-        group.transition().duration(300).attr("transform", `translate(${x}, ${height}) scale(1)`);
-        textGroup.transition().duration(300).style("opacity", 0);
-        bellPath.transition().duration(300).attr("filter", "drop-shadow(0px 0px 0px rgba(0,0,0,0))");
-      };
-
-      group
-        .on("mouseover", growBell)
-        .on("mouseout", shrinkBell)
-        .on("click", (event: any) => {
-          const [mouseX, mouseY] = d3.pointer(event);
-          const clickedItem = categoryData.items[0];
-          setTooltip({ x: mouseX + x, y: mouseY + height, item: clickedItem });
+      group.on("mouseover", function () {
+        group.node()?.parentNode?.appendChild(group.node()!);
+        groups.forEach((g, j) => {
+          const scale = i === j ? zoomScale : 1;
+          g.transition().duration(300)
+            .attr("transform", `translate(${spacing * (j + 1)}, ${height}) scale(${scale})`);
         });
+        textGroup.transition().duration(300).style("opacity", 1);
+        bellPath.transition().duration(300)
+          .attr("filter", "drop-shadow(4px 4px 8px rgba(0,0,0,0.4))");
+      });
+
+      group.on("mouseout", function () {
+        groups.forEach((g, j) => {
+          g.transition().duration(300)
+            .attr("transform", `translate(${spacing * (j + 1)}, ${height}) scale(1)`);
+        });
+        textGroup.transition().duration(300).style("opacity", 0);
+        bellPath.transition().duration(300)
+          .attr("filter", "drop-shadow(0px 0px 0px rgba(0,0,0,0))");
+      });
 
       bellPath.transition().duration(800).attr("opacity", 1);
     });
@@ -1652,14 +1861,6 @@ const BellDiagram: React.FC = () => {
   return (
     <div className={styles.container} ref={containerRef}>
       <svg ref={svgRef} />
-      {tooltip && (
-        <Tooltip
-          x={tooltip.x}
-          y={tooltip.y}
-          item={tooltip.item}
-          onClose={() => setTooltip(null)}
-        />
-      )}
     </div>
   );
 };
