@@ -1455,8 +1455,6 @@
 // export default BellDiagram;
 
 
-
-
 "use client";
 
 import * as d3 from "d3";
@@ -1468,48 +1466,52 @@ import Tooltip from "./Tooltip";
 import mockData from "../../data/mockData.json";
 import styles from "./BellDiagram.module.scss";
 
-/**
- * Custom wrapText: returns number of wrapped lines for dynamic Y adjustment
- */
+/** Hybrid pre-wrap function to avoid splitting long words poorly */
+const splitTextIntoLines = (text: string, maxCharsPerLine: number): string[] => {
+  const words = text.split(/\s+/);
+  let lines: string[] = [];
+  let currentLine = "";
+
+  words.forEach(word => {
+    if ((currentLine + " " + word).trim().length <= maxCharsPerLine) {
+      currentLine = (currentLine + " " + word).trim();
+    } else {
+      lines.push(currentLine);
+      currentLine = word;
+    }
+  });
+
+  if (currentLine) lines.push(currentLine);
+  return lines;
+};
+
+/** Final bullet-safe wrapping inside SVG with true width handling */
 const wrapText = (
   textElement: d3.Selection<SVGTextElement, unknown, null, undefined>,
   text: string,
   width: number
 ): number => {
-  const words = text.split(/\s+/);
-  let line: string[] = [];
-  let lineNumber = 0;
-  const lineHeight = 0.8;
+  const approxCharPerLine = Math.floor(width / 7);  // Width estimation based on font family size
+  const lines = splitTextIntoLines(text, approxCharPerLine);
   const y = +textElement.attr("y");
   const x = +textElement.attr("x");
   textElement.text(null);
 
-  let tspan = textElement.append("tspan").attr("x", x).attr("y", y).attr("dy", `0em`);
-  for (let i = 0; i < words.length; i++) {
-    line.push(words[i]);
-    tspan.text(line.join(" "));
+  lines.forEach((line, idx) => {
+    textElement.append("tspan")
+      .attr("x", x)
+      .attr("y", y)
+      .attr("dy", `${idx * 1.2}em`)
+      .text(line);
+  });
 
-    if (tspan.node()!.getComputedTextLength() > width) {
-      line.pop();
-      tspan.text(line.join(" "));
-      line = [words[i]];
-      tspan = textElement
-        .append("tspan")
-        .attr("x", x)
-        .attr("y", y)
-        .attr("dy", `${++lineNumber * lineHeight}em`)
-        .text(words[i]);
-    }
-  }
-  return lineNumber + 1; // total lines wrapped
+  return lines.length;
 };
 
-/**
- * Calculates available width at specific Y position inside the bell shape
- */
+/** Bell width shrinkage based on height position */
 const getAvailableWidthAtY = (y: number, bellW: number, bellH: number) => {
   const relativeHeight = Math.abs(y) / bellH;
-  const widthShrinkFactor = 1 - relativeHeight * 0.6; // shrink near top
+  const widthShrinkFactor = 1 - relativeHeight * 0.6;
   return bellW * widthShrinkFactor;
 };
 
@@ -1557,7 +1559,6 @@ const BellDiagram: React.FC = () => {
     categories.forEach((cat, i) => {
       const categoryData = data[cat];
       const x = spacing * (i + 1);
-
       const group = bellLayer.append("g").attr("transform", `translate(${x}, ${height})`);
       const bellData = createBellData(bellWidth, bellHeight);
 
@@ -1572,31 +1573,28 @@ const BellDiagram: React.FC = () => {
         .style("cursor", "pointer")
         .attr("opacity", 0);
 
-      // Subcategory Text Block (fully adaptive)
       const textGroup = group.append("g").attr("class", "subcategory-text").style("opacity", 0);
       const items = categoryData.items;
-      // const fontSize = isMobile ? 12 : 16;
+
       const baseFontSize = isMobile ? 12 : 16;
       const maxComfortableItems = isMobile ? 4 : 6;
-const scaleFactor = Math.min(1, maxComfortableItems / items.length);
-const fontSize = Math.max(baseFontSize * scaleFactor, isMobile ? 9 : 12);
-      const lineHeight = fontSize * 1.2;
+      const scaleFactor = Math.min(1, maxComfortableItems / items.length);
+      const fontSize = Math.max(baseFontSize * scaleFactor, isMobile ? 10 : 12);
+      const lineHeight = fontSize * 1.3;
 
       // Estimate total lines for vertical centering
       let totalLines = 0;
       const lineEstimates: number[] = [];
 
       items.forEach(item => {
-        const approxLines = Math.ceil(item.title.length / 18); // rough estimation
-        lineEstimates.push(approxLines);
-        totalLines += approxLines;
+        const estLines = Math.ceil(item.title.length / 18);
+        lineEstimates.push(estLines);
+        totalLines += estLines;
       });
 
       const totalHeight = totalLines * lineHeight;
-      // Shift up by small percentage for more items
       const shiftUp = Math.min(totalLines * (lineHeight * 0.15), bellHeight * 0.1);
       let runningY = -bellHeight * 0.68 + (bellHeight - totalHeight) / 2 - shiftUp;
-
 
       items.forEach((item, idx) => {
         const text = textGroup
@@ -1614,7 +1612,6 @@ const fontSize = Math.max(baseFontSize * scaleFactor, isMobile ? 9 : 12);
         runningY += linesWrapped * lineHeight;
       });
 
-      // Main Category Label
       const labelText = group.append("text")
         .attr("x", 0)
         .attr("y", -bellHeight * 0.80)
@@ -1625,7 +1622,6 @@ const fontSize = Math.max(baseFontSize * scaleFactor, isMobile ? 9 : 12);
 
       wrapText(labelText, cat, bellWidth - 10);
 
-      // Animation & Interaction
       const growBell = () => {
         group.transition().duration(300).attr("transform", `translate(${x}, ${height}) scale(${growFactor})`);
         textGroup.transition().duration(300).style("opacity", 1);
