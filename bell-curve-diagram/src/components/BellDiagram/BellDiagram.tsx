@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import * as d3 from "d3";
@@ -12,7 +10,7 @@ import mockData from "../../data/mockData.json";
 import styles from "./BellDiagram.module.scss";
 
 /**
- * Text wrapping function that returns total lines used
+ * Text wrapping function — returns total wrapped lines
  */
 const wrapText = (
   textElement: d3.Selection<SVGTextElement, unknown, null, undefined>,
@@ -27,7 +25,6 @@ const wrapText = (
   const x = +textElement.attr("x");
   textElement.text(null);
   let tspan = textElement.append("tspan").attr("x", x).attr("y", y).attr("dy", `0em`);
-
   for (let i = 0; i < words.length; i++) {
     line.push(words[i]);
     tspan.text(line.join(" "));
@@ -47,7 +44,7 @@ const wrapText = (
 };
 
 /**
- * Shrinking width near top of bell
+ * Shrink available width based on bell Y position
  */
 const getAvailableWidthAtY = (y: number, bellW: number, bellH: number) => {
   const relativeHeight = Math.abs(y) / bellH;
@@ -77,9 +74,9 @@ const BellDiagram: React.FC = () => {
     const height = isMobile ? 400 : 500;
     const bellWidth = isMobile ? 90 : 160;
     const bellHeight = isMobile ? 280 : 430;
+    const zoomScale = isMobile ? 1.25 : 1.25;
     const categories = Object.keys(data);
     const spacing = width / (categories.length + 1);
-    const zoomScale = isMobile ? 1.25 : 1.25; // ✅ zoom scale only for active bell
 
     const bellLayer = d3.select(svgRef.current).html("").append("g");
     const createBellData = (bellW: number, bellH: number) => [
@@ -165,7 +162,7 @@ const BellDiagram: React.FC = () => {
         group.node()?.parentNode?.appendChild(group.node()!);
         groups.forEach((g, j) => {
           const scale = i === j ? zoomScale : 1;
-          g.transition().duration(300)
+          g.transition().duration(300).ease(d3.easeCubicOut)
             .attr("transform", `translate(${spacing * (j + 1)}, ${height}) scale(${scale})`);
         });
         textGroup.transition().duration(300).style("opacity", 1);
@@ -175,7 +172,7 @@ const BellDiagram: React.FC = () => {
 
       group.on("mouseout", function () {
         groups.forEach((g, j) => {
-          g.transition().duration(300)
+          g.transition().duration(300).ease(d3.easeCubicOut)
             .attr("transform", `translate(${spacing * (j + 1)}, ${height}) scale(1)`);
         });
         textGroup.transition().duration(300).style("opacity", 0);
