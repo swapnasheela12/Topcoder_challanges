@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useRef, useState } from "react";
 
 import { Item } from "../../types/BellTypes";
@@ -11,9 +13,22 @@ interface TooltipProps {
   item: Item;
   direction: "left" | "right";
   onClose: () => void;
+  onMouseEnter: () => void;  // ✅ Added
+  onMouseLeave: () => void;  // ✅ Added
 }
 
-const Tooltip: React.FC<TooltipProps> = ({ x, y, absoluteX, absoluteY, item, direction, onClose }) => {
+const Tooltip: React.FC<TooltipProps> = ({
+  x,
+  y,
+  absoluteX,
+  absoluteY,
+  item,
+  direction,
+  onClose,
+  onMouseEnter,
+  onMouseLeave
+}) => {
+
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState<{ top: number; left: number }>({ top: y, left: x });
 
@@ -48,6 +63,8 @@ const Tooltip: React.FC<TooltipProps> = ({ x, y, absoluteX, absoluteY, item, dir
       ref={tooltipRef}
       className={`${styles.tooltip} ${styles[direction]}`}
       style={{ top: position.top, left: position.left, width: 290 }}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       onClick={onClose}
     >
       <div className={styles.header}>{item.toolTipTitle}</div>

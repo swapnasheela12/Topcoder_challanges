@@ -50,7 +50,10 @@ const BellDiagram: React.FC = () => {
     x: number; y: number; absoluteX: number; absoluteY: number;
     item: Item; direction: "left" | "right";
   } | null>(null);
+
+  const [isTooltipHovered, setIsTooltipHovered] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const hoverTimerRef = useRef<NodeJS.Timeout | null>(null);  // ✅ New hover timer
 
   const clearTooltip = useCallback(() => {
     setTooltip(null);
@@ -80,7 +83,6 @@ const BellDiagram: React.FC = () => {
 
     const bellLayer = d3.select(svgRef.current).html("").append("g");
 
-    // Drop shadow filter
     const defs = bellLayer.append("defs");
     const shadow = defs.append("filter")
       .attr("id", "bellShadow")
@@ -135,93 +137,105 @@ const BellDiagram: React.FC = () => {
         .style("word-break", "break-word")
         .text(cat);
 
+      // ✅ Add delay before opening tooltip
       group.on("mouseenter", () => {
-        group.node()?.parentNode?.appendChild(group.node()!);
-        bellPath.attr("filter", "url(#bellShadow)");
-        zoomableGroup.transition().duration(300).ease(d3.easeCubicOut).attr("transform", `scale(${zoomScale})`);
+        if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
 
-        const textGroup = group.append("g").attr("class", "subcategory-text");
-        const items = categoryData.items;
-        const fontSize = isMobile ? 8 : isTablet ? 12 : 16;
-        const lineHeight = fontSize * 1.1;
+        hoverTimerRef.current = setTimeout(() => {
+          group.node()?.parentNode?.appendChild(group.node()!);
+          bellPath.attr("filter", "url(#bellShadow)");
+          zoomableGroup.transition().duration(300).ease(d3.easeCubicOut).attr("transform", `scale(${zoomScale})`);
 
-        let totalLines = 0;
-        items.forEach(item => totalLines += Math.ceil(item.title.length / 18));
-        const totalTextHeight = totalLines * lineHeight;
+          const textGroup = group.append("g").attr("class", "subcategory-text");
+          const items = categoryData.items;
+          const fontSize = isMobile ? 8 : isTablet ? 12 : 16;
+          const lineHeight = fontSize * 1.1;
 
-        const iconSize = isMobile ? 20 : isTablet ? 30 : 35;
-        const iconMarginTop = 10;
-        const iconMarginBottom = 50;
-        const totalBlockHeight = iconMarginTop + iconSize + iconMarginBottom + totalTextHeight;
+          let totalLines = 0;
+          items.forEach(item => totalLines += Math.ceil(item.title.length / 18));
+          const totalTextHeight = totalLines * lineHeight;
 
-        const downwardShift = bellHeight * 0.08;
-        const availableSpace = bellHeight * 0.75;
-        const startY = -bellHeight + (bellHeight - availableSpace) / 2 + (availableSpace - totalBlockHeight) / 2 + downwardShift;
+          const iconSize = isMobile ? 20 : isTablet ? 30 : 35;
+          const iconMarginTop = 10;
+          const iconMarginBottom = 50;
+          const totalBlockHeight = iconMarginTop + iconSize + iconMarginBottom + totalTextHeight;
 
-        textGroup.append("image")
-          .attr("href", categoryData.icon)
-          .attr("x", -iconSize / 2)
-          .attr("y", startY + iconMarginTop)
-          .attr("width", iconSize)
-          .attr("height", iconSize);
+          const downwardShift = bellHeight * 0.08;
+          const availableSpace = bellHeight * 0.75;
+          const startY = -bellHeight + (bellHeight - availableSpace) / 2 + (availableSpace - totalBlockHeight) / 2 + downwardShift;
 
-        let runningY = startY + iconMarginTop + iconSize + iconMarginBottom;
+          textGroup.append("image")
+            .attr("href", categoryData.icon)
+            .attr("x", -iconSize / 2)
+            .attr("y", startY + iconMarginTop)
+            .attr("width", iconSize)
+            .attr("height", iconSize);
 
-        const availableWidthAtY = (yPosition: number) => {
-          const relativeY = Math.abs(yPosition) / bellHeight;
-          const minWidth = bellWidth * 0.4;
-          const maxWidth = bellWidth * 1.09;
-          return minWidth + (maxWidth - minWidth) * (1 - relativeY);
-        };
+          let runningY = startY + iconMarginTop + iconSize + iconMarginBottom;
 
-        items.forEach(item => {
-          const availableWidth = availableWidthAtY(runningY);
-          const text = textGroup.append("text")
-            .attr("x", 0)
-            .attr("y", runningY)
-            .attr("text-anchor", "middle")
-            .attr("fill", "#fff")
-            .attr("font-size", fontSize)
-            .style("font-family", "'Nunito-Regular', sans-serif");
+          const availableWidthAtY = (yPosition: number) => {
+            const relativeY = Math.abs(yPosition) / bellHeight;
+            const minWidth = bellWidth * 0.4;
+            const maxWidth = bellWidth * 1.09;
+            return minWidth + (maxWidth - minWidth) * (1 - relativeY);
+          };
 
-          const linesWrapped = wrapText(text, `• ${item.title}`, availableWidth);
-          runningY += linesWrapped * lineHeight;
-        });
+          items.forEach(item => {
+            const availableWidth = availableWidthAtY(runningY);
+            const text = textGroup.append("text")
+              .attr("x", 0)
+              .attr("y", runningY)
+              .attr("text-anchor", "middle")
+              .attr("fill", "#fff")
+              .attr("font-size", fontSize)
+              .style("font-family", "'Nunito-Regular', sans-serif");
 
-        // ✅ Tooltip logic on hover
-        const clickedItem = categoryData.items[0];
-        const containerRect = containerRef.current?.getBoundingClientRect();
-        const svgRect = svgRef.current?.getBoundingClientRect();
+            const linesWrapped = wrapText(text, `• ${item.title}`, availableWidth);
+            runningY += linesWrapped * lineHeight;
+          });
 
-        const bellCenterX = svgRect!.left + x;
-        const zoomOffsetY = bellHeight * (zoomScale - 1) / 2;
-        const verticalAdjustment = bellHeight * 0.10;
-        const bellCenterY = svgRect!.top + (height - bellHeight) + (bellHeight / 2) - zoomOffsetY + verticalAdjustment;
+          const clickedItem = categoryData.items[0];
+          const containerRect = containerRef.current?.getBoundingClientRect();
+          const svgRect = svgRef.current?.getBoundingClientRect();
 
-        const containerCenterX = containerRect!.left + containerRect!.width / 2;
-        const direction = bellCenterX < containerCenterX ? "right" : "left";
+          const bellCenterX = svgRect!.left + x;
+          const zoomOffsetY = bellHeight * (zoomScale - 1) / 2;
+          const verticalAdjustment = bellHeight * 0.10;
+          const bellCenterY = svgRect!.top + (height - bellHeight) + (bellHeight / 2) - zoomOffsetY + verticalAdjustment;
 
-        setTooltip({
-          x: bellCenterX - containerRect!.left,
-          y: bellCenterY - containerRect!.top,
-          absoluteX: bellCenterX,
-          absoluteY: bellCenterY,
-          item: clickedItem,
-          direction,
-        });
+          const containerCenterX = containerRect!.left + containerRect!.width / 2;
+          const direction = bellCenterX < containerCenterX ? "right" : "left";
 
-        if (timerRef.current) clearTimeout(timerRef.current);
-        timerRef.current = setTimeout(() => {
-          setTooltip(null);
-          timerRef.current = null;
-        }, 4000);
+          setTooltip({
+            x: bellCenterX - containerRect!.left,
+            y: bellCenterY - containerRect!.top,
+            absoluteX: bellCenterX,
+            absoluteY: bellCenterY,
+            item: clickedItem,
+            direction,
+          });
+
+          if (timerRef.current) clearTimeout(timerRef.current);
+          timerRef.current = setTimeout(() => {
+            setTooltip(null);
+            timerRef.current = null;
+          }, 4000);
+        }, 100); // ✅ 100ms delay before showing
       });
 
       group.on("mouseleave", () => {
-        zoomableGroup.transition().duration(300).ease(d3.easeCubicOut).attr("transform", "scale(1)");
-        bellPath.attr("filter", null);
-        group.select(".subcategory-text").remove();
-        clearTooltip();
+        if (hoverTimerRef.current) {
+          clearTimeout(hoverTimerRef.current);
+          hoverTimerRef.current = null;
+        }
+        setTimeout(() => {
+          if (!isTooltipHovered) {
+            zoomableGroup.transition().duration(300).ease(d3.easeCubicOut).attr("transform", "scale(1)");
+            bellPath.attr("filter", null);
+            group.select(".subcategory-text").remove();
+            clearTooltip();
+          }
+        }, 100);
       });
     });
 
@@ -229,7 +243,8 @@ const BellDiagram: React.FC = () => {
       .attr("width", "100%").attr("height", "100%")
       .attr("viewBox", `0 0 ${width} ${height}`)
       .attr("preserveAspectRatio", "xMidYMid meet");
-  }, [data, clearTooltip]);
+
+  }, [data, clearTooltip, isTooltipHovered]);
 
   return (
     <div className={styles.container} ref={containerRef}>
@@ -243,6 +258,8 @@ const BellDiagram: React.FC = () => {
           item={tooltip.item}
           direction={tooltip.direction}
           onClose={clearTooltip}
+          onMouseEnter={() => setIsTooltipHovered(true)}
+          onMouseLeave={() => setIsTooltipHovered(false)}
         />
       )}
     </div>
