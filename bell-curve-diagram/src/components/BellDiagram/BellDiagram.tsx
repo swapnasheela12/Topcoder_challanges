@@ -9,7 +9,10 @@ import Tooltip from "./Tooltip";
 import mockData from "../../data/mockData.json";
 import styles from "./BellDiagram.module.scss";
 
-// Text wrapping utility
+/**
+ * Utility function to wrap long text into multiple lines within specified width.
+ * Used for subcategory bullet text to avoid overflow.
+ */
 const wrapText = (
   textElement: d3.Selection<SVGTextElement, unknown, null, undefined>,
   text: string,
@@ -31,7 +34,11 @@ const wrapText = (
       line.pop();
       tspan.text(line.join(" "));
       line = [words[i]];
-      tspan = textElement.append("tspan").attr("x", x).attr("y", y).attr("dy", `${++lineNumber * lineHeight}em`).text(words[i]);
+      tspan = textElement.append("tspan")
+        .attr("x", x)
+        .attr("y", y)
+        .attr("dy", `${++lineNumber * lineHeight}em`)
+        .text(words[i]);
     }
   }
   return lineNumber + 1;
@@ -49,6 +56,7 @@ const BellDiagram: React.FC = () => {
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Clear tooltip manually or automatically after timer ends
   const clearTooltip = useCallback(() => {
     setTooltip(null);
     if (timerRef.current) {
@@ -57,6 +65,7 @@ const BellDiagram: React.FC = () => {
     }
   }, []);
 
+  // Close tooltip on outside click
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (tooltip && !containerRef.current?.contains(event.target as Node)) {
@@ -70,19 +79,23 @@ const BellDiagram: React.FC = () => {
   useEffect(() => {
     if (!svgRef.current || !containerRef.current) return;
 
+    // Responsive behavior based on container width
     const containerWidth = containerRef.current.clientWidth;
     const isMobile = containerWidth < 768;
     const isTablet = containerWidth >= 768 && containerWidth < 1200;
 
+    // Dynamic sizing based on screen size
     const width = containerWidth;
     const height = isMobile ? 400 : isTablet ? 480 : 550;
     const bellWidth = isMobile ? 90 : isTablet ? 140 : 180;
     const bellHeight = isMobile ? 275 : isTablet ? 375 : 450;
     const zoomScale = 1.25;
+
     const categories = Object.keys(data);
     const spacing = width / (categories.length + 1);
     const bellLayer = d3.select(svgRef.current).html("").append("g");
 
+    // Bell shape coordinates generator
     const createBellData = (bellW: number, bellH: number) => [
       [-bellW * 0.65, 0], [-bellW * 0.5, -bellH * 0.1], [-bellW * 0.4, -bellH * 0.4],
       [-bellW * 0.2, -bellH * 0.7], [0, -bellH * 0.71], [bellW * 0.2, -bellH * 0.7],
@@ -91,28 +104,28 @@ const BellDiagram: React.FC = () => {
 
     const groups: d3.Selection<SVGGElement, unknown, null, undefined>[] = [];
 
+    // Render each bell category
     categories.forEach((cat, i) => {
       const categoryData = data[cat];
       const x = spacing * (i + 1);
       const group = bellLayer.append("g").attr("transform", `translate(${x}, ${height})`);
       groups.push(group);
 
-      // Draw Bell Shape
+      /** Draw Bell Shape with opacity **/
       const bellPath = group.append("path")
         .attr("d", d3.line().curve(d3.curveBasis)(createBellData(bellWidth, bellHeight) as [number, number][]))
         .attr("fill", categoryData.color)
-        // .attr("stroke", "#fff")
         .attr("stroke-width", 2)
         .style("cursor", "pointer")
         .attr("opacity", 0.6);
 
-      // Sub-category text group (VERTICAL CENTERED BLOCK)
+      /** Create textGroup container inside bell **/
       const textGroup = group.append("g").attr("class", "subcategory-text").style("opacity", 0);
       const items = categoryData.items;
       const fontSize = isMobile ? 8 : isTablet ? 12 : 14;
       const lineHeight = fontSize * 1.1;
 
-      // Vertical center calculation for bullet list
+      /** Calculate how many lines total for vertical centering **/
       let totalLines = 0;
       const lineEstimates: number[] = [];
 
@@ -124,22 +137,22 @@ const BellDiagram: React.FC = () => {
 
       const totalHeight = totalLines * lineHeight;
       const verticalPadding = bellHeight * 0.15;
-      const downwardShift = bellHeight * 0.20;  // shift 5% down (you can adjust this)
-      let runningY = -bellHeight + verticalPadding + (bellHeight - verticalPadding * 1 - totalHeight) / 2 + downwardShift;
+      const downwardShift = bellHeight * 0.20;
+
+      let runningY = -bellHeight + verticalPadding + (bellHeight - verticalPadding - totalHeight) / 2 + downwardShift;
       const runningYIcon = -bellHeight + verticalPadding + (bellHeight - verticalPadding * 2 - totalHeight) / 2 + downwardShift;
-     
-      // ---- Add image icon at the top of textGroup ----
-      const iconSize = isMobile ? 20 : isTablet ? 20 : 30;  // responsive icon size
+
+      /** Add Icon image above bullet list **/
+      const iconSize = isMobile ? 20 : isTablet ? 20 : 30;
       textGroup.append("image")
         .attr("class", "subcategory-icon")
         .attr("href", categoryData.icon)
         .attr("x", -iconSize / 2)
-        // .attr("y", runningYIcon - 80)  // slight downward offset from top of bell
         .attr("y", runningYIcon - (bellHeight * 0.12))
         .attr("width", iconSize)
         .attr("height", iconSize);
 
-      // ------------------------------------------------
+      /** Add bullet list items under icon **/
       items.forEach(item => {
         const text = textGroup.append("text")
           .attr("class", "subcategory-text-list")
@@ -155,16 +168,12 @@ const BellDiagram: React.FC = () => {
         runningY += linesWrapped * lineHeight;
       });
 
-      // Main label (directly above bell)
-      // Responsive font size and bell positioning
+      /** Main label above bell using foreignObject **/
       const labelFontSize = isMobile ? 10 : isTablet ? 16 : 16;
       const labelYOffset = -bellHeight * 0.90;
-
-      // Dynamic width/height for foreignObject label
       const labelWidth = bellWidth * (isMobile ? 0.9 : 0.7);
       const labelHeight = bellHeight * 0.2;
 
-      // Add foreignObject for label
       const labelGroup = group.append("foreignObject")
         .attr("x", -labelWidth / 2)
         .attr("y", labelYOffset)
@@ -186,85 +195,7 @@ const BellDiagram: React.FC = () => {
         .style("word-break", "break-word")
         .text(cat);
 
-
-
-      // const labelFontSize = isMobile ? 8 : isTablet ? 12 : 16;
-      // const labelYOffset = -bellHeight * 0.85;
-      // const labelWidth = bellWidth * 0.7;
-      // const labelHeight = bellHeight * 0.15;
-
-      // const labelGroup = group.append("foreignObject")
-      //   .attr("x", -labelWidth / 2)
-      //   .attr("y", labelYOffset)
-      //   .attr("width", labelWidth)
-      //   .attr("height", labelHeight);
-
-      // labelGroup.append("xhtml:div")
-      //   .style("width", `${labelWidth}px`)
-      //   .style("height", `${labelHeight}px`)
-      //   .style("display", "flex")
-      //   .style("justify-content", "center")
-      //   .style("align-items", "center")
-      //   .style("text-align", "center")
-      //   .style("font-family", "'Figtree-Bold', sans-serif")
-      //   .style("font-weight", "bold")
-      //   .style("font-size", `${labelFontSize}px`)
-      //   .style("color", categoryData.textColor)
-      //   .style("line-height", "1.2")
-      //   .style("word-break", "break-word")
-      //   .text(cat);
-
-
-
-      // // For controlled wrapping
-      // const displayLabel = (cat === "Dashboards & Visualizations")
-      //   ? "Dashboards\n&\nVisualizations"
-      //   : cat;
-
-      // // Main label (directly above bell)
-      // const labelFontSize = isMobile ? 8 : isTablet ? 12 : 16;
-      // const labelYOffset = -bellHeight * 0.85;
-
-      // const labelText = group.append("text")
-      //   .attr("x", 0)
-      //   .attr("y", labelYOffset)
-      //   .attr("text-anchor", "middle")
-      //   .attr("fill", categoryData.textColor)
-      //   .attr("font-size", labelFontSize)
-      //   .attr("font-weight", "bold")
-      //   .style("font-family", "'Figtree-Bold', sans-serif");
-
-      // // Apply controlled wrap
-      // const lines = displayLabel.split("\n");
-
-      // lines.forEach((line, idx) => {
-      //   labelText.append("tspan")
-      //     .attr("x", 0)
-      //     .attr("dy", idx === 0 ? "0em" : "1.1em")
-      //     .text(line);
-      // });
-
-      // // Apply slight vertical adjustment upwards for multi-line labels
-      // const verticalAdjustment = -(lines.length - 1) * (labelFontSize * 0.8) / 2 - (labelFontSize * 0.2);
-      // labelText.attr("dy", verticalAdjustment);
-
-
-
-
-
-      // const labelFontSize = isMobile ? 8 : isTablet ? 12 : 16;
-      // const labelText = group.append("text")
-      //   .attr("x", 0)
-      //   .attr("y", -bellHeight * 0.80)
-      //   .attr("text-anchor", "middle")
-      //   .attr("fill", categoryData.textColor)
-      //   .attr("font-size", labelFontSize)
-      //   .attr("font-weight", "bold")
-      //   .style("font-family", "'Figtree-Bold', sans-serif");
-
-      // wrapText(labelText, cat, bellWidth * 0.5);
-
-      // Hover animations
+      /** Hover interaction: zoom + shadow **/
       group.on("mouseover", () => {
         group.node()?.parentNode?.appendChild(group.node()!);
         groups.forEach((g, j) => {
@@ -287,7 +218,7 @@ const BellDiagram: React.FC = () => {
           .attr("filter", "drop-shadow(0px 0px 0px rgba(0,0,0,0))");
       });
 
-      // Tooltip logic
+      /** Tooltip click handler **/
       group.on("click", () => {
         const clickedItem = categoryData.items[0];
         const containerRect = containerRef.current?.getBoundingClientRect();
@@ -314,7 +245,8 @@ const BellDiagram: React.FC = () => {
         }, 5000);
       });
 
-      bellPath.transition().duration(800).attr("opacity", 1);
+      /** Animate bell appearance **/
+      bellPath.transition().duration(800).attr("opacity", 0.6);
     });
 
     d3.select(svgRef.current).attr("width", width).attr("height", height);
