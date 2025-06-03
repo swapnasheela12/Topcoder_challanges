@@ -89,7 +89,7 @@ const BellDiagram: React.FC = () => {
     const height = isMobile ? 400 : isTablet ? 480 : 550;
     const bellWidth = isMobile ? 90 : isTablet ? 140 : 180;
     const bellHeight = isMobile ? 275 : isTablet ? 375 : 450;
-    const zoomScale = 1.25;
+    const zoomScale = 1.30;
 
     const categories = Object.keys(data);
     const spacing = width / (categories.length + 1);
@@ -122,7 +122,7 @@ const BellDiagram: React.FC = () => {
       /** Create textGroup container inside bell **/
       const textGroup = group.append("g").attr("class", "subcategory-text").style("opacity", 0);
       const items = categoryData.items;
-      const fontSize = isMobile ? 8 : isTablet ? 12 : 14;
+      const fontSize = isMobile ? 8 : isTablet ? 12 : 16;
       const lineHeight = fontSize * 1.1;
 
       /** Calculate how many lines total for vertical centering **/
@@ -203,8 +203,8 @@ const BellDiagram: React.FC = () => {
           g.transition().duration(300).ease(d3.easeCubicOut)
             .attr("transform", `translate(${spacing * (j + 1)}, ${height}) scale(${scale})`);
         });
-        textGroup.transition().duration(300).style("opacity", 1);
-        bellPath.transition().duration(300)
+        textGroup.transition().duration(300).style("opacity", 2);
+        bellPath.transition().duration(300).style("opacity", 1)
           .attr("filter", "drop-shadow(4px 4px 8px rgba(0,0,0,0.4))");
       });
 
