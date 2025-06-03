@@ -2,13 +2,14 @@
 
 import * as d3 from "d3";
 
-import React, { useEffect, useRef } from "react";
+import { BellData, Item } from "../../types/BellTypes";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
-import { BellData } from "../../types/BellTypes";
+import Tooltip from "./Tooltip";
 import mockData from "../../data/mockData.json";
 import styles from "./BellDiagram.module.scss";
 
-// Text wrapping utility
+// ✅ Utility for wrapping subcategory text
 const wrapText = (
   textElement: d3.Selection<SVGTextElement, unknown, null, undefined>,
   text: string,
@@ -22,7 +23,6 @@ const wrapText = (
   const x = +textElement.attr("x");
   textElement.text(null);
   let tspan = textElement.append("tspan").attr("x", x).attr("y", y).attr("dy", `0em`);
-
   for (let i = 0; i < words.length; i++) {
     line.push(words[i]);
     tspan.text(line.join(" "));
@@ -45,6 +45,20 @@ const BellDiagram: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const data: BellData = mockData;
 
+  const [tooltip, setTooltip] = useState<{
+    x: number; y: number; absoluteX: number; absoluteY: number;
+    item: Item; direction: "left" | "right";
+  } | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const clearTooltip = useCallback(() => {
+    setTooltip(null);
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
   useEffect(() => {
     if (!svgRef.current || !containerRef.current) return;
 
@@ -65,7 +79,7 @@ const BellDiagram: React.FC = () => {
 
     const bellLayer = d3.select(svgRef.current).html("").append("g");
 
-    // Drop shadow filter
+    // ✅ Define reusable drop shadow filter
     const defs = bellLayer.append("defs");
     const shadow = defs.append("filter")
       .attr("id", "bellShadow")
@@ -121,12 +135,14 @@ const BellDiagram: React.FC = () => {
         .style("word-break", "break-word")
         .text(cat);
 
+      // ✅ Hover logic with zoom and shadow
       group.on("mouseenter", () => {
         group.node()?.parentNode?.appendChild(group.node()!);
         bellPath.attr("filter", "url(#bellShadow)");
         zoomableGroup.transition().duration(300).ease(d3.easeCubicOut)
           .attr("transform", `scale(${zoomScale})`);
 
+        // Subcategory text rendering
         const textGroup = group.append("g").attr("class", "subcategory-text");
         const items = categoryData.items;
         const fontSize = isMobile ? 8 : isTablet ? 12 : 16;
@@ -136,10 +152,9 @@ const BellDiagram: React.FC = () => {
         items.forEach(item => totalLines += Math.ceil(item.title.length / 18));
         const totalTextHeight = totalLines * lineHeight;
 
-        // Apply margin adjustments here:
         const iconSize = isMobile ? 20 : isTablet ? 30 : 35;
-        const iconMarginTop = 10; // top margin above icon
-        const iconMarginBottom = 50; // margin between icon and text
+        const iconMarginTop = 10;
+        const iconMarginBottom = 50;
         const totalBlockHeight = iconMarginTop + iconSize + iconMarginBottom + totalTextHeight;
 
         const downwardShift = bellHeight * 0.08;
@@ -182,6 +197,37 @@ const BellDiagram: React.FC = () => {
         bellPath.attr("filter", null);
         group.select(".subcategory-text").remove();
       });
+
+      // ✅ Tooltip logic (now fully refined to center properly)
+      group.on("click", () => {
+        const clickedItem = categoryData.items[0];
+        const containerRect = containerRef.current?.getBoundingClientRect();
+        const svgRect = svgRef.current?.getBoundingClientRect();
+
+        const bellCenterX = svgRect!.left + x;
+        const zoomOffsetY = bellHeight * (zoomScale - 1) / 2;
+        const verticalAdjustment = bellHeight * 0.10; // fine-tune center position
+
+        const bellCenterY = svgRect!.top + (height - bellHeight) + (bellHeight / 2) - zoomOffsetY + verticalAdjustment;
+
+        const containerCenterX = containerRect!.left + containerRect!.width / 2;
+        const direction = bellCenterX < containerCenterX ? "right" : "left";
+
+        setTooltip({
+          x: bellCenterX - containerRect!.left,
+          y: bellCenterY - containerRect!.top,
+          absoluteX: bellCenterX,
+          absoluteY: bellCenterY,
+          item: clickedItem,
+          direction,
+        });
+
+        if (timerRef.current) clearTimeout(timerRef.current);
+        timerRef.current = setTimeout(() => {
+          setTooltip(null);
+          timerRef.current = null;
+        }, 5000);
+      });
     });
 
     d3.select(svgRef.current)
@@ -189,11 +235,23 @@ const BellDiagram: React.FC = () => {
       .attr("height", "100%")
       .attr("viewBox", `0 0 ${width} ${height}`)
       .attr("preserveAspectRatio", "xMidYMid meet");
-  }, [data]);
+
+  }, [data, clearTooltip]);
 
   return (
     <div className={styles.container} ref={containerRef}>
       <svg ref={svgRef} />
+      {tooltip && (
+        <Tooltip
+          x={tooltip.x}
+          y={tooltip.y}
+          absoluteX={tooltip.absoluteX}
+          absoluteY={tooltip.absoluteY}
+          item={tooltip.item}
+          direction={tooltip.direction}
+          onClose={clearTooltip}
+        />
+      )}
     </div>
   );
 };
