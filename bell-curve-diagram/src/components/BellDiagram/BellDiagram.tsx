@@ -54,8 +54,8 @@ const BellDiagram: React.FC = () => {
 
     const width = containerWidth;
     const height = isMobile ? 300 : isTablet ? 480 : 550;
-    const bellWidth = isMobile ? 80 : isTablet ? 140 : 180;
-    const bellHeight = isMobile ? 230 : isTablet ? 375 : 450;
+    const bellWidth = isMobile ? 80 : isTablet ? 140 : 170;
+    const bellHeight = isMobile ? 230 : isTablet ? 375 : 430;
     const zoomScale = 1.3;
     const sidePadding = isMobile ? 20 : isTablet ? 40 : 60;
 
@@ -65,14 +65,12 @@ const BellDiagram: React.FC = () => {
 
     const bellLayer = d3.select(svgRef.current).html("").append("g");
 
-    // Add drop shadow filter (only for bell curve)
+    // Drop shadow filter
     const defs = bellLayer.append("defs");
     const shadow = defs.append("filter")
       .attr("id", "bellShadow")
-      .attr("x", "-50%")
-      .attr("y", "-50%")
-      .attr("width", "200%")
-      .attr("height", "200%");
+      .attr("x", "-50%").attr("y", "-50%")
+      .attr("width", "200%").attr("height", "200%");
     shadow.append("feDropShadow")
       .attr("dx", "0")
       .attr("dy", "4")
@@ -124,14 +122,11 @@ const BellDiagram: React.FC = () => {
         .text(cat);
 
       group.on("mouseenter", () => {
-        group.node()?.parentNode?.appendChild(group.node()!); // bring to front
-
-        bellPath.attr("filter", "url(#bellShadow)"); // apply shadow
-
+        group.node()?.parentNode?.appendChild(group.node()!);
+        bellPath.attr("filter", "url(#bellShadow)");
         zoomableGroup.transition().duration(300).ease(d3.easeCubicOut)
           .attr("transform", `scale(${zoomScale})`);
 
-        // Render subcategory text group
         const textGroup = group.append("g").attr("class", "subcategory-text");
         const items = categoryData.items;
         const fontSize = isMobile ? 8 : isTablet ? 12 : 16;
@@ -140,9 +135,13 @@ const BellDiagram: React.FC = () => {
         let totalLines = 0;
         items.forEach(item => totalLines += Math.ceil(item.title.length / 18));
         const totalTextHeight = totalLines * lineHeight;
-        const iconSize = isMobile ? 20 : isTablet ? 24 : 30;
-        const iconMarginBottom = lineHeight * 0.5;
-        const totalBlockHeight = iconSize + iconMarginBottom + totalTextHeight;
+
+        // Apply margin adjustments here:
+        const iconSize = isMobile ? 20 : isTablet ? 30 : 35;
+        const iconMarginTop = 10; // top margin above icon
+        const iconMarginBottom = 50; // margin between icon and text
+        const totalBlockHeight = iconMarginTop + iconSize + iconMarginBottom + totalTextHeight;
+
         const downwardShift = bellHeight * 0.08;
         const availableSpace = bellHeight * 0.75;
         const startY = -bellHeight + (bellHeight - availableSpace) / 2 + (availableSpace - totalBlockHeight) / 2 + downwardShift;
@@ -150,11 +149,11 @@ const BellDiagram: React.FC = () => {
         textGroup.append("image")
           .attr("href", categoryData.icon)
           .attr("x", -iconSize / 2)
-          .attr("y", startY)
+          .attr("y", startY + iconMarginTop)
           .attr("width", iconSize)
           .attr("height", iconSize);
 
-        let runningY = startY + iconSize + iconMarginBottom;
+        let runningY = startY + iconMarginTop + iconSize + iconMarginBottom;
 
         const availableWidthAtY = (yPosition: number) => {
           const relativeY = Math.abs(yPosition) / bellHeight;
@@ -165,8 +164,6 @@ const BellDiagram: React.FC = () => {
 
         items.forEach(item => {
           const availableWidth = availableWidthAtY(runningY);
-          const textX = -availableWidth / 2;
-
           const text = textGroup.append("text")
             .attr("x", 0)
             .attr("y", runningY)
@@ -182,7 +179,7 @@ const BellDiagram: React.FC = () => {
 
       group.on("mouseleave", () => {
         zoomableGroup.transition().duration(300).ease(d3.easeCubicOut).attr("transform", "scale(1)");
-        bellPath.attr("filter", null); // remove shadow
+        bellPath.attr("filter", null);
         group.select(".subcategory-text").remove();
       });
     });
