@@ -1,4 +1,4 @@
-"use client";
+"use client";  // ✅ Next.js 13+ server/client hybrid - ensures React Client Component
 
 import * as d3 from "d3";
 
@@ -9,10 +9,12 @@ import Tooltip from "./Tooltip";
 import mockData from "../../data/mockData.json";
 import styles from "./BellDiagram.module.scss";
 
-/**
- * Utility function to wrap long text into multiple lines within specified width.
- * Used for subcategory bullet text to avoid overflow.
- */
+// ✅ TypeScript model for bell data structure
+ // ✅ Tooltip component for popover display
+ // ✅ Static mock data for bell rendering
+ // ✅ SCSS module for component styling
+
+// ✅ Utility function for wrapping long text into multiple lines, inside specified width.
 const wrapText = (
   textElement: d3.Selection<SVGTextElement, unknown, null, undefined>,
   text: string,
@@ -31,6 +33,7 @@ const wrapText = (
     line.push(words[i]);
     tspan.text(line.join(" "));
     if (tspan.node()!.getComputedTextLength() > width) {
+      // ✅ Wrap to next line if text exceeds allowed width
       line.pop();
       tspan.text(line.join(" "));
       line = [words[i]];
@@ -45,17 +48,18 @@ const wrapText = (
 };
 
 const BellDiagram: React.FC = () => {
-  const svgRef = useRef<SVGSVGElement | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const data: BellData = mockData;
+  const svgRef = useRef<SVGSVGElement | null>(null);  // ✅ Ref to SVG root
+  const containerRef = useRef<HTMLDivElement>(null);  // ✅ Ref to full container div
+  const data: BellData = mockData;  // ✅ Load mockData for rendering bells
 
   const [tooltip, setTooltip] = useState<{
     x: number; y: number; absoluteX: number; absoluteY: number;
     item: Item; direction: "left" | "right";
-  } | null>(null);
+  } | null>(null);  // ✅ Tooltip state management
 
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);  // ✅ Timer ref for tooltip timeout
 
+  // ✅ Utility to clear tooltip
   const clearTooltip = useCallback(() => {
     setTooltip(null);
     if (timerRef.current) {
@@ -64,6 +68,7 @@ const BellDiagram: React.FC = () => {
     }
   }, []);
 
+  // ✅ Close tooltip on outside click
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (tooltip && !containerRef.current?.contains(event.target as Node)) {
@@ -74,28 +79,31 @@ const BellDiagram: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, [tooltip, clearTooltip]);
 
+  // ✅ Main D3 rendering logic inside useEffect hook
   useEffect(() => {
     if (!svgRef.current || !containerRef.current) return;
 
+    // ✅ Responsive container calculations
     const containerWidth = containerRef.current.clientWidth;
     const isMobile = containerWidth < 768;
     const isTablet = containerWidth >= 768 && containerWidth < 1200;
 
+    // ✅ Define SVG canvas size based on device
     const width = containerWidth;
     const height = isMobile ? 400 : isTablet ? 480 : 550;
     const bellWidth = isMobile ? 90 : isTablet ? 140 : 180;
     const bellHeight = isMobile ? 275 : isTablet ? 375 : 450;
-    const zoomScale = 1.30;
-
-    // ✅ Add internal left/right padding
+    const zoomScale = 1.30;  // ✅ Scaling factor for hover zoom
     const sidePadding = isMobile ? 20 : isTablet ? 40 : 60;
 
+    // ✅ Calculate category positioning
     const categories = Object.keys(data);
     const usableWidth = width - (sidePadding * 2);
     const spacing = usableWidth / (categories.length + 1);
 
-    const bellLayer = d3.select(svgRef.current).html("").append("g");
+    const bellLayer = d3.select(svgRef.current).html("").append("g");  // ✅ Clear and reset SVG content
 
+    // ✅ Bell curve path generator (basis spline)
     const createBellData = (bellW: number, bellH: number) => [
       [-bellW * 0.65, 0], [-bellW * 0.5, -bellH * 0.1], [-bellW * 0.4, -bellH * 0.4],
       [-bellW * 0.2, -bellH * 0.7], [0, -bellH * 0.71], [bellW * 0.2, -bellH * 0.7],
@@ -111,54 +119,14 @@ const BellDiagram: React.FC = () => {
       const group = bellLayer.append("g").attr("transform", `translate(${x}, ${height})`);
       groups.push(group);
 
-      const bellPath = group.append("path")
+      // ✅ Draw main bell path
+      group.append("path")
         .attr("d", d3.line().curve(d3.curveBasis)(createBellData(bellWidth, bellHeight) as [number, number][]))
         .attr("fill", categoryData.color)
         .attr("stroke-width", 2)
-        .style("cursor", "pointer")
-        .attr("opacity", 0.6);
+        .style("cursor", "pointer");
 
-      const textGroup = group.append("g").attr("class", "subcategory-text").style("opacity", 0);
-      const items = categoryData.items;
-      const fontSize = isMobile ? 8 : isTablet ? 12 : 16;
-      const lineHeight = fontSize * 1.1;
-
-      let totalLines = 0;
-      items.forEach(item => {
-        totalLines += Math.ceil(item.title.length / 18);
-      });
-
-      const totalHeight = totalLines * lineHeight;
-      const verticalPadding = bellHeight * 0.15;
-      const downwardShift = bellHeight * 0.20;
-
-      let runningY = -bellHeight + verticalPadding + (bellHeight - verticalPadding - totalHeight) / 2 + downwardShift;
-      const runningYIcon = -bellHeight + verticalPadding + (bellHeight - verticalPadding * 2 - totalHeight) / 2 + downwardShift;
-
-      const iconSize = isMobile ? 20 : isTablet ? 20 : 30;
-      textGroup.append("image")
-        .attr("class", "subcategory-icon")
-        .attr("href", categoryData.icon)
-        .attr("x", -iconSize / 2)
-        .attr("y", runningYIcon - (bellHeight * 0.12))
-        .attr("width", iconSize)
-        .attr("height", iconSize);
-
-      items.forEach(item => {
-        const text = textGroup.append("text")
-          .attr("class", "subcategory-text-list")
-          .attr("x", 0)
-          .attr("y", runningY)
-          .attr("text-anchor", "middle")
-          .attr("fill", "#fff")
-          .attr("font-size", fontSize)
-          .style("font-family", "'Nunito-Regular', sans-serif");
-
-        const availableWidth = bellWidth * 0.75;
-        const linesWrapped = wrapText(text, `• ${item.title}`, availableWidth);
-        runningY += linesWrapped * lineHeight;
-      });
-
+      // ✅ Main label (always visible at top of bell)
       const labelFontSize = isMobile ? 10 : 16;
       const labelYOffset = -bellHeight * 0.90;
       const labelWidth = bellWidth * (isMobile ? 0.9 : 0.7);
@@ -185,28 +153,80 @@ const BellDiagram: React.FC = () => {
         .style("word-break", "break-word")
         .text(cat);
 
-      group.on("mouseover", () => {
+      // ✅ Hover logic to zoom & dynamically render subcategory list
+      group.on("mouseenter", () => {
         group.node()?.parentNode?.appendChild(group.node()!);
         groups.forEach((g, j) => {
           const scale = i === j ? zoomScale : 1;
           g.transition().duration(300).ease(d3.easeCubicOut)
             .attr("transform", `translate(${sidePadding + spacing * (j + 1)}, ${height}) scale(${scale})`);
         });
-        textGroup.transition().duration(300).style("opacity", 2);
-        bellPath.transition().duration(300).style("opacity", 1)
-          .attr("filter", "drop-shadow(4px 4px 8px rgba(0,0,0,0.4))");
+
+        const textGroup = group.append("g").attr("class", "subcategory-text");
+
+        const items = categoryData.items;
+        const fontSize = isMobile ? 8 : isTablet ? 12 : 16;
+        const lineHeight = fontSize * 1.1;
+
+        let totalLines = 0;
+        items.forEach(item => {
+          totalLines += Math.ceil(item.title.length / 18);
+        });
+
+        const totalTextHeight = totalLines * lineHeight;
+        const iconSize = isMobile ? 20 : isTablet ? 24 : 30;
+        const iconMarginBottom = lineHeight * 0.5;
+        const totalBlockHeight = iconSize + iconMarginBottom + totalTextHeight;
+        const downwardShift = bellHeight * 0.25;
+        const availableSpace = bellHeight * 0.75;
+        const startY = -bellHeight + (bellHeight - availableSpace) / 2 + (availableSpace - totalBlockHeight) / 2 + downwardShift;
+
+        // ✅ Render icon above text group
+        textGroup.append("image")
+          .attr("class", "subcategory-icon")
+          .attr("href", categoryData.icon)
+          .attr("x", -iconSize / 2)
+          .attr("y", startY)
+          .attr("width", iconSize)
+          .attr("height", iconSize);
+
+        let runningY = startY + iconSize + iconMarginBottom;
+
+        // ✅ Calculate width for wrapping dynamically depending on bell shape Y-position
+        const availableWidthAtY = (yPosition: number) => {
+          const relativeY = Math.abs(yPosition) / bellHeight;
+          const minWidth = bellWidth * 1.2;  // ✅ top narrow width
+          const maxWidth = bellWidth * 0.4;  // ✅ bottom wide width
+          return minWidth + (maxWidth - minWidth) * relativeY;
+        };
+
+        // ✅ Subcategory text rendering
+        items.forEach(item => {
+          const text = textGroup.append("text")
+            .attr("class", "subcategory-text-list")
+            .attr("x", 0)
+            .attr("y", runningY)
+            .attr("text-anchor", "middle")
+            .attr("fill", "#fff")
+            .attr("font-size", fontSize)
+            .style("font-family", "'Nunito-Regular', sans-serif");
+
+          const availableWidth = availableWidthAtY(runningY);
+          const linesWrapped = wrapText(text, `• ${item.title}`, availableWidth);
+          runningY += linesWrapped * lineHeight;
+        });
       });
 
-      group.on("mouseout", () => {
+      // ✅ Mouseleave: collapse and reset bell state
+      group.on("mouseleave", () => {
         groups.forEach((g, j) => {
           g.transition().duration(300).ease(d3.easeCubicOut)
             .attr("transform", `translate(${sidePadding + spacing * (j + 1)}, ${height}) scale(1)`);
         });
-        textGroup.transition().duration(300).style("opacity", 0);
-        bellPath.transition().duration(300).style("opacity", 0.6)
-          .attr("filter", "drop-shadow(0px 0px 0px rgba(0,0,0,0))");
+        group.select(".subcategory-text").remove();
       });
 
+      // ✅ Tooltip click handler (unchanged)
       group.on("click", () => {
         const clickedItem = categoryData.items[0];
         const containerRect = containerRef.current?.getBoundingClientRect();
@@ -232,11 +252,9 @@ const BellDiagram: React.FC = () => {
           timerRef.current = null;
         }, 5000);
       });
-
-      bellPath.transition().duration(800).attr("opacity", 0.6);
     });
 
-    // ✅ Responsive SVG with viewBox
+    // ✅ Fully responsive scalable viewBox rendering
     d3.select(svgRef.current)
       .attr("width", "100%")
       .attr("height", "100%")
