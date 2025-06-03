@@ -5,13 +5,10 @@ import * as d3 from "d3";
 import { BellData, Item } from "../../types/BellTypes";
 import React, { useEffect, useRef, useState } from "react";
 
-import Tooltip from "./Tooltip";
+import Tooltip from "./Tooltip"; // Tooltip component as before
 import mockData from "../../data/mockData.json";
 import styles from "./BellDiagram.module.scss";
 
-/**
- * Text wrapping function — returns total wrapped lines
- */
 const wrapText = (
   textElement: d3.Selection<SVGTextElement, unknown, null, undefined>,
   text: string,
@@ -43,9 +40,6 @@ const wrapText = (
   return lineNumber + 1;
 };
 
-/**
- * Shrink available width based on bell Y position
- */
 const getAvailableWidthAtY = (y: number, bellW: number, bellH: number) => {
   const relativeHeight = Math.abs(y) / bellH;
   const widthShrinkFactor = 1 - relativeHeight * 0.6;
@@ -58,6 +52,7 @@ const BellDiagram: React.FC = () => {
   const data: BellData = mockData;
 
   const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [tooltip, setTooltip] = useState<{ x: number; y: number; item: Item } | null>(null);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -158,6 +153,7 @@ const BellDiagram: React.FC = () => {
 
       wrapText(labelText, cat, bellWidth - 10);
 
+      // Hover zoom logic
       group.on("mouseover", function () {
         group.node()?.parentNode?.appendChild(group.node()!);
         groups.forEach((g, j) => {
@@ -180,6 +176,13 @@ const BellDiagram: React.FC = () => {
           .attr("filter", "drop-shadow(0px 0px 0px rgba(0,0,0,0))");
       });
 
+      // Tooltip on click
+      group.on("click", (event: any) => {
+        const [mouseX, mouseY] = d3.pointer(event);
+        const clickedItem = categoryData.items[0]; // or any item logic
+        setTooltip({ x: mouseX + x, y: mouseY + height, item: clickedItem });
+      });
+
       bellPath.transition().duration(800).attr("opacity", 1);
     });
 
@@ -189,6 +192,9 @@ const BellDiagram: React.FC = () => {
   return (
     <div className={styles.container} ref={containerRef}>
       <svg ref={svgRef} />
+      {tooltip && (
+        <Tooltip x={tooltip.x} y={tooltip.y} item={tooltip.item} onClose={() => setTooltip(null)} />
+      )}
     </div>
   );
 };
