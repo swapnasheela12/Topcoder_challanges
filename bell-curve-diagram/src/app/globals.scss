@@ -20,9 +20,46 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  color: var(--background);
+  background: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+
+  .container {
+    width: 100%;
+    height: 100%;
+    margin: auto;
+
+    .heading {
+      text-align: center;
+      padding: 30px 20px;
+      max-width: 100%;
+
+      .title {
+        font-family: "Figtree-Bold", sans-serif;
+        font-weight: 700;
+        font-size: 2rem;
+
+        @media (min-width: 768px) {
+          font-size: 2.5rem;
+        }
+
+        .highlight {
+          color: #007f7e; // Teal color (match your image)
+        }
+      }
+
+      .subtitle {
+        font-family: "Nunito-Regular", sans-serif;
+        font-size: 1rem;
+        margin-top: 10px;
+        color: #333;
+
+        @media (min-width: 768px) {
+          font-size: 1.125rem;
+        }
+      }
+    }
+  }
 }
 
 
@@ -61,7 +98,7 @@ body {
 
 @font-face {
   font-family: 'icomoon';
-  src: 
+  src:
     url('../../public/fonts/icomoon/fonts/icomoon.ttf') format('ttf');
   font-weight: normal;
   font-style: normal;
