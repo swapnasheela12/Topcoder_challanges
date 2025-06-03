@@ -9,6 +9,7 @@ import Tooltip from "./Tooltip";
 import mockData from "../../data/mockData.json";
 import styles from "./BellDiagram.module.scss";
 
+// Text wrapping utility
 const wrapText = (
   textElement: d3.Selection<SVGTextElement, unknown, null, undefined>,
   text: string,
@@ -36,25 +37,14 @@ const wrapText = (
   return lineNumber + 1;
 };
 
-const getAvailableWidthAtY = (y: number, bellW: number, bellH: number) => {
-  const relativeHeight = Math.abs(y) / bellH;
-  const widthShrinkFactor = 1 - relativeHeight * 0.6;
-  return bellW * widthShrinkFactor;
-};
-
 const BellDiagram: React.FC = () => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const data: BellData = mockData;
 
-  const [isMobile, setIsMobile] = useState<boolean>(false);
   const [tooltip, setTooltip] = useState<{
-    x: number;
-    y: number;
-    absoluteX: number;
-    absoluteY: number;
-    item: Item;
-    direction: "left" | "right";
+    x: number; y: number; absoluteX: number; absoluteY: number;
+    item: Item; direction: "left" | "right";
   } | null>(null);
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -65,13 +55,6 @@ const BellDiagram: React.FC = () => {
       clearTimeout(timerRef.current);
       timerRef.current = null;
     }
-  }, []);
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
@@ -88,10 +71,13 @@ const BellDiagram: React.FC = () => {
     if (!svgRef.current || !containerRef.current) return;
 
     const containerWidth = containerRef.current.clientWidth;
+    const isMobile = containerWidth < 768;
+    const isTablet = containerWidth >= 768 && containerWidth < 1200;
+
     const width = containerWidth;
-    const height = isMobile ? 400 : 500;
-    const bellWidth = isMobile ? 90 : 160;
-    const bellHeight = isMobile ? 280 : 430;
+    const height = isMobile ? 400 : isTablet ? 480 : 550;
+    const bellWidth = isMobile ? 90 : isTablet ? 140 : 180;
+    const bellHeight = isMobile ? 275 : isTablet ? 375 : 450;
     const zoomScale = 1.25;
     const categories = Object.keys(data);
     const spacing = width / (categories.length + 1);
@@ -111,24 +97,25 @@ const BellDiagram: React.FC = () => {
       const group = bellLayer.append("g").attr("transform", `translate(${x}, ${height})`);
       groups.push(group);
 
-      const bellData = createBellData(bellWidth, bellHeight);
+      // Draw Bell Shape
       const bellPath = group.append("path")
-        .attr("d", d3.line().curve(d3.curveBasis)(bellData as [number, number][]))
+        .attr("d", d3.line().curve(d3.curveBasis)(createBellData(bellWidth, bellHeight) as [number, number][]))
         .attr("fill", categoryData.color)
-        .attr("fill-opacity", 0.9)
         .attr("stroke", "#fff")
         .attr("stroke-width", 2)
-        .attr("filter", "drop-shadow(0px 0px 0px rgba(0,0,0,0))")
         .style("cursor", "pointer")
         .attr("opacity", 0);
 
+      // Sub-category text group (VERTICAL CENTERED BLOCK)
       const textGroup = group.append("g").attr("class", "subcategory-text").style("opacity", 0);
       const items = categoryData.items;
-      const fontSize = isMobile ? 12 : 14;
+      const fontSize = isMobile ? 8 : isTablet ? 12 : 14;
       const lineHeight = fontSize * 1.1;
 
+      // Vertical center calculation for bullet list
       let totalLines = 0;
       const lineEstimates: number[] = [];
+
       items.forEach(item => {
         const approxLines = Math.ceil(item.title.length / 18);
         lineEstimates.push(approxLines);
@@ -136,29 +123,136 @@ const BellDiagram: React.FC = () => {
       });
 
       const totalHeight = totalLines * lineHeight;
-      const shiftUp = Math.min(totalLines * (lineHeight * 0.15), bellHeight * 0.1);
-      let runningY = -bellHeight * 0.68 + (bellHeight - totalHeight) / 2 - shiftUp;
+      const verticalPadding = bellHeight * 0.15;
+      const downwardShift = bellHeight * 0.25;  // shift 5% down (you can adjust this)
+      let runningY = -bellHeight + verticalPadding + (bellHeight - verticalPadding * 2 - totalHeight) / 2 + downwardShift;
+
+      // let runningY = -bellHeight + verticalPadding + (bellHeight - verticalPadding * 2 - totalHeight) / 2;
 
       items.forEach(item => {
         const text = textGroup.append("text")
-          .attr("x", 0).attr("y", runningY).attr("text-anchor", "middle")
-          .attr("fill", "#FFFFFF").attr("font-size", fontSize).attr("font-weight", 400)
-          .style("font-family", "'Nunito', sans-serif");
+          .attr("x", 0)
+          .attr("y", runningY)
+          .attr("text-anchor", "middle")
+          .attr("fill", "#fff")
+          .attr("font-size", fontSize)
+          .style("font-family", "'Nunito-Regular', sans-serif");
 
-        const availableWidth = getAvailableWidthAtY(runningY, bellWidth - 10, bellHeight);
+        const availableWidth = bellWidth * 0.75;
         const linesWrapped = wrapText(text, `• ${item.title}`, availableWidth);
         runningY += linesWrapped * lineHeight;
       });
 
-      const labelText = group.append("text")
-        .attr("x", 0).attr("y", -bellHeight * 0.80)
-        .attr("text-anchor", "middle")
-        .attr("fill", categoryData.textColor)
-        .attr("font-size", isMobile ? 12 : 16)
-        .attr("font-weight", "bold");
+      // Main label (directly above bell)
+      // Responsive font size and bell positioning
+      const labelFontSize = isMobile ? 9 : isTablet ? 12 : 16;
+      const labelYOffset = -bellHeight * 0.85;
 
-      wrapText(labelText, cat, bellWidth - 10);
+      // Dynamic width/height for foreignObject label
+      const labelWidth = bellWidth * (isMobile ? 0.9 : 0.7);
+      const labelHeight = bellHeight * 0.2;
 
+      // Add foreignObject for label
+      const labelGroup = group.append("foreignObject")
+        .attr("x", -labelWidth / 2)
+        .attr("y", labelYOffset)
+        .attr("width", labelWidth)
+        .attr("height", labelHeight);
+
+      labelGroup.append("xhtml:div")
+        .style("width", `${labelWidth}px`)
+        .style("height", `${labelHeight}px`)
+        .style("display", "flex")
+        .style("justify-content", "center")
+        .style("align-items", "center")
+        .style("text-align", "center")
+        .style("font-family", "'Figtree-Bold', sans-serif")
+        .style("font-weight", "bold")
+        .style("font-size", `${labelFontSize}px`)
+        .style("color", categoryData.textColor)
+        .style("line-height", "1.3")
+        .style("word-break", "break-word")
+        .text(cat);
+
+
+
+      // const labelFontSize = isMobile ? 8 : isTablet ? 12 : 16;
+      // const labelYOffset = -bellHeight * 0.85;
+      // const labelWidth = bellWidth * 0.7;
+      // const labelHeight = bellHeight * 0.15;
+
+      // const labelGroup = group.append("foreignObject")
+      //   .attr("x", -labelWidth / 2)
+      //   .attr("y", labelYOffset)
+      //   .attr("width", labelWidth)
+      //   .attr("height", labelHeight);
+
+      // labelGroup.append("xhtml:div")
+      //   .style("width", `${labelWidth}px`)
+      //   .style("height", `${labelHeight}px`)
+      //   .style("display", "flex")
+      //   .style("justify-content", "center")
+      //   .style("align-items", "center")
+      //   .style("text-align", "center")
+      //   .style("font-family", "'Figtree-Bold', sans-serif")
+      //   .style("font-weight", "bold")
+      //   .style("font-size", `${labelFontSize}px`)
+      //   .style("color", categoryData.textColor)
+      //   .style("line-height", "1.2")
+      //   .style("word-break", "break-word")
+      //   .text(cat);
+
+
+
+      // // For controlled wrapping
+      // const displayLabel = (cat === "Dashboards & Visualizations")
+      //   ? "Dashboards\n&\nVisualizations"
+      //   : cat;
+
+      // // Main label (directly above bell)
+      // const labelFontSize = isMobile ? 8 : isTablet ? 12 : 16;
+      // const labelYOffset = -bellHeight * 0.85;
+
+      // const labelText = group.append("text")
+      //   .attr("x", 0)
+      //   .attr("y", labelYOffset)
+      //   .attr("text-anchor", "middle")
+      //   .attr("fill", categoryData.textColor)
+      //   .attr("font-size", labelFontSize)
+      //   .attr("font-weight", "bold")
+      //   .style("font-family", "'Figtree-Bold', sans-serif");
+
+      // // Apply controlled wrap
+      // const lines = displayLabel.split("\n");
+
+      // lines.forEach((line, idx) => {
+      //   labelText.append("tspan")
+      //     .attr("x", 0)
+      //     .attr("dy", idx === 0 ? "0em" : "1.1em")
+      //     .text(line);
+      // });
+
+      // // Apply slight vertical adjustment upwards for multi-line labels
+      // const verticalAdjustment = -(lines.length - 1) * (labelFontSize * 0.8) / 2 - (labelFontSize * 0.2);
+      // labelText.attr("dy", verticalAdjustment);
+
+
+
+
+
+      // const labelFontSize = isMobile ? 8 : isTablet ? 12 : 16;
+      // const labelText = group.append("text")
+      //   .attr("x", 0)
+      //   .attr("y", -bellHeight * 0.80)
+      //   .attr("text-anchor", "middle")
+      //   .attr("fill", categoryData.textColor)
+      //   .attr("font-size", labelFontSize)
+      //   .attr("font-weight", "bold")
+      //   .style("font-family", "'Figtree-Bold', sans-serif");
+
+      // wrapText(labelText, cat, bellWidth * 0.5);
+
+      // Hover animations
       group.on("mouseover", () => {
         group.node()?.parentNode?.appendChild(group.node()!);
         groups.forEach((g, j) => {
@@ -181,7 +275,7 @@ const BellDiagram: React.FC = () => {
           .attr("filter", "drop-shadow(0px 0px 0px rgba(0,0,0,0))");
       });
 
-      // Tooltip logic (with direction calculation)
+      // Tooltip logic
       group.on("click", () => {
         const clickedItem = categoryData.items[0];
         const containerRect = containerRef.current?.getBoundingClientRect();
@@ -212,7 +306,7 @@ const BellDiagram: React.FC = () => {
     });
 
     d3.select(svgRef.current).attr("width", width).attr("height", height);
-  }, [data, isMobile, clearTooltip]);
+  }, [data, clearTooltip]);
 
   return (
     <div className={styles.container} ref={containerRef}>
