@@ -9,7 +9,7 @@ import Tooltip from "./Tooltip";
 import mockData from "../../data/mockData.json";
 import styles from "./BellDiagram.module.scss";
 
-// ✅ Utility for wrapping subcategory text
+// Text wrapping utility
 const wrapText = (
   textElement: d3.Selection<SVGTextElement, unknown, null, undefined>,
   text: string,
@@ -23,6 +23,7 @@ const wrapText = (
   const x = +textElement.attr("x");
   textElement.text(null);
   let tspan = textElement.append("tspan").attr("x", x).attr("y", y).attr("dy", `0em`);
+
   for (let i = 0; i < words.length; i++) {
     line.push(words[i]);
     tspan.text(line.join(" "));
@@ -79,15 +80,14 @@ const BellDiagram: React.FC = () => {
 
     const bellLayer = d3.select(svgRef.current).html("").append("g");
 
-    // ✅ Define reusable drop shadow filter
+    // Drop shadow filter
     const defs = bellLayer.append("defs");
     const shadow = defs.append("filter")
       .attr("id", "bellShadow")
       .attr("x", "-50%").attr("y", "-50%")
       .attr("width", "200%").attr("height", "200%");
     shadow.append("feDropShadow")
-      .attr("dx", "0")
-      .attr("dy", "4")
+      .attr("dx", "0").attr("dy", "4")
       .attr("stdDeviation", "6")
       .attr("flood-color", "#000")
       .attr("flood-opacity", "0.4");
@@ -135,14 +135,11 @@ const BellDiagram: React.FC = () => {
         .style("word-break", "break-word")
         .text(cat);
 
-      // ✅ Hover logic with zoom and shadow
       group.on("mouseenter", () => {
         group.node()?.parentNode?.appendChild(group.node()!);
         bellPath.attr("filter", "url(#bellShadow)");
-        zoomableGroup.transition().duration(300).ease(d3.easeCubicOut)
-          .attr("transform", `scale(${zoomScale})`);
+        zoomableGroup.transition().duration(300).ease(d3.easeCubicOut).attr("transform", `scale(${zoomScale})`);
 
-        // Subcategory text rendering
         const textGroup = group.append("g").attr("class", "subcategory-text");
         const items = categoryData.items;
         const fontSize = isMobile ? 8 : isTablet ? 12 : 16;
@@ -190,24 +187,15 @@ const BellDiagram: React.FC = () => {
           const linesWrapped = wrapText(text, `• ${item.title}`, availableWidth);
           runningY += linesWrapped * lineHeight;
         });
-      });
 
-      group.on("mouseleave", () => {
-        zoomableGroup.transition().duration(300).ease(d3.easeCubicOut).attr("transform", "scale(1)");
-        bellPath.attr("filter", null);
-        group.select(".subcategory-text").remove();
-      });
-
-      // ✅ Tooltip logic (now fully refined to center properly)
-      group.on("click", () => {
+        // ✅ Tooltip logic on hover
         const clickedItem = categoryData.items[0];
         const containerRect = containerRef.current?.getBoundingClientRect();
         const svgRect = svgRef.current?.getBoundingClientRect();
 
         const bellCenterX = svgRect!.left + x;
         const zoomOffsetY = bellHeight * (zoomScale - 1) / 2;
-        const verticalAdjustment = bellHeight * 0.10; // fine-tune center position
-
+        const verticalAdjustment = bellHeight * 0.10;
         const bellCenterY = svgRect!.top + (height - bellHeight) + (bellHeight / 2) - zoomOffsetY + verticalAdjustment;
 
         const containerCenterX = containerRect!.left + containerRect!.width / 2;
@@ -226,16 +214,21 @@ const BellDiagram: React.FC = () => {
         timerRef.current = setTimeout(() => {
           setTooltip(null);
           timerRef.current = null;
-        }, 5000);
+        }, 4000);
+      });
+
+      group.on("mouseleave", () => {
+        zoomableGroup.transition().duration(300).ease(d3.easeCubicOut).attr("transform", "scale(1)");
+        bellPath.attr("filter", null);
+        group.select(".subcategory-text").remove();
+        clearTooltip();
       });
     });
 
     d3.select(svgRef.current)
-      .attr("width", "100%")
-      .attr("height", "100%")
+      .attr("width", "100%").attr("height", "100%")
       .attr("viewBox", `0 0 ${width} ${height}`)
       .attr("preserveAspectRatio", "xMidYMid meet");
-
   }, [data, clearTooltip]);
 
   return (
