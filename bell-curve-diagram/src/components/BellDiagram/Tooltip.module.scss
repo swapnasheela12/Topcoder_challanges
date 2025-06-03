@@ -140,7 +140,50 @@
   z-index: 1000;
   font-family: 'Nunito', sans-serif;
   width: 290px;
+
+  // The arrow by default — points upwards
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 100%; /* position above tooltip */
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent transparent #212833 transparent;
+  }
+
+  &.arrow-bottom::after {
+    top: 100%;
+    bottom: auto;
+    border-color: #212833 transparent transparent transparent;
+  }
+
+  &.arrow-left::after {
+    left: 20px;
+    transform: none;
+  }
+
+  &.arrow-right::after {
+    right: 20px;
+    left: auto;
+    transform: none;
+  }
 }
+
+
+// /* ✅ The arrow style */
+// .arrow {
+//   position: absolute;
+//   top: -10px; /* show arrow above tooltip */
+//   left: 50%;
+//   transform: translateX(-50%);
+//   width: 0;
+//   height: 0;
+//   border-left: 10px solid transparent;
+//   border-right: 10px solid transparent;
+//   border-bottom: 10px solid #212833;
+// }
 
 .header {
   font-size: 18px;
@@ -169,7 +212,7 @@
 }
 
 .index {
-  font-family: 'Figtree-Bold', sans-serif;
+  font-family: 'Figtree', sans-serif;
   font-weight: 700;
   font-size: 26px;
   line-height: 30px;
@@ -177,7 +220,7 @@
   margin-right: 10px;
   color: #ffffff;
   flex-shrink: 0;
-  width: 34px; /* increased width for better alignment due to bigger font size */
+  width: 34px;
   text-align: right;
   color:#767676;
 }

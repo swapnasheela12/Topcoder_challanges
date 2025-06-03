@@ -166,11 +166,12 @@ const BellDiagram: React.FC = () => {
       const items = categoryData.items;
 
       // Font scaling logic based on number of items
-      const baseFontSize = isMobile ? 12 : 16;
-      const maxComfortableItems = isMobile ? 4 : 6;
-      const scaleFactor = Math.min(1, maxComfortableItems / items.length);
-      const fontSize = Math.max(baseFontSize * scaleFactor, isMobile ? 9 : 12);
-      const lineHeight = fontSize * 1.2;
+      // const baseFontSize = isMobile ? 12 : 16;
+      // const maxComfortableItems = isMobile ? 4 : 6;
+      // const scaleFactor = Math.min(1, maxComfortableItems / items.length);
+      // const fontSize = Math.max(baseFontSize * scaleFactor, isMobile ? 9 : 12);
+      const fontSize = isMobile ? 12 : 14;
+      const lineHeight = fontSize * 1.1;
 
       // Calculate vertical centering of subcategory items inside bell
       let totalLines = 0;

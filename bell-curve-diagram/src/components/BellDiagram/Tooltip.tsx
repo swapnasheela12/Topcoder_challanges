@@ -15,6 +15,7 @@ interface TooltipProps {
 const Tooltip: React.FC<TooltipProps> = ({ x, y, absoluteX, absoluteY, item, onClose }) => {
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState<{ top: number; left: number }>({ top: y, left: x });
+  const [arrowClass, setArrowClass] = useState<string>("");
 
   useEffect(() => {
     if (!tooltipRef.current) return;
@@ -23,7 +24,6 @@ const Tooltip: React.FC<TooltipProps> = ({ x, y, absoluteX, absoluteY, item, onC
     const tooltipHeight = tooltipRef.current.offsetHeight;
     const padding = 20;
 
-    // ✅ Get parent container dimensions
     const container = tooltipRef.current.parentElement;
     const containerRect = container?.getBoundingClientRect();
 
@@ -31,28 +31,33 @@ const Tooltip: React.FC<TooltipProps> = ({ x, y, absoluteX, absoluteY, item, onC
 
     let top = absoluteY - containerRect.top + padding;
     let left = absoluteX - containerRect.left + padding;
+    let arrow = "";
 
-    // Flip vertically inside parent
     if (absoluteY + tooltipHeight + padding > containerRect.bottom) {
+      // Not enough space below, open above
       top = absoluteY - containerRect.top - tooltipHeight - padding;
+      arrow = "arrow-bottom";
     }
 
-    // Flip horizontally inside parent
     if (absoluteX + tooltipWidth + padding > containerRect.right) {
       left = absoluteX - containerRect.left - tooltipWidth - padding;
+      arrow += " arrow-right";
+    } else {
+      arrow += " arrow-left";
     }
 
-    // Always stay inside parent (safe zone clamp)
+    // Safe zone inside parent
     top = Math.max(padding, Math.min(top, containerRect.height - tooltipHeight - padding));
     left = Math.max(padding, Math.min(left, containerRect.width - tooltipWidth - padding));
 
     setPosition({ top, left });
+    setArrowClass(arrow.trim());
   }, [absoluteX, absoluteY]);
 
   return (
     <div
       ref={tooltipRef}
-      className={styles.tooltip}
+      className={`${styles.tooltip} ${styles[arrowClass]}`}
       style={{ top: position.top, left: position.left, width: 290 }}
       onClick={onClose}
     >
