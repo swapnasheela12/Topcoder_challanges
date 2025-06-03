@@ -101,10 +101,10 @@ const BellDiagram: React.FC = () => {
       const bellPath = group.append("path")
         .attr("d", d3.line().curve(d3.curveBasis)(createBellData(bellWidth, bellHeight) as [number, number][]))
         .attr("fill", categoryData.color)
-        .attr("stroke", "#fff")
+        // .attr("stroke", "#fff")
         .attr("stroke-width", 2)
         .style("cursor", "pointer")
-        .attr("opacity", 0);
+        .attr("opacity", 0.6);
 
       // Sub-category text group (VERTICAL CENTERED BLOCK)
       const textGroup = group.append("g").attr("class", "subcategory-text").style("opacity", 0);
@@ -124,8 +124,8 @@ const BellDiagram: React.FC = () => {
 
       const totalHeight = totalLines * lineHeight;
       const verticalPadding = bellHeight * 0.15;
-      const downwardShift = bellHeight * 0.25;  // shift 5% down (you can adjust this)
-      let runningY = -bellHeight + verticalPadding + (bellHeight - verticalPadding * 2 - totalHeight) / 2 + downwardShift;
+      const downwardShift = bellHeight * 0.20;  // shift 5% down (you can adjust this)
+      let runningY = -bellHeight + verticalPadding + (bellHeight - verticalPadding * 1 - totalHeight) / 2 + downwardShift;
       const runningYIcon = -bellHeight + verticalPadding + (bellHeight - verticalPadding * 2 - totalHeight) / 2 + downwardShift;
      
       // ---- Add image icon at the top of textGroup ----
@@ -135,7 +135,7 @@ const BellDiagram: React.FC = () => {
         .attr("href", categoryData.icon)
         .attr("x", -iconSize / 2)
         // .attr("y", runningYIcon - 80)  // slight downward offset from top of bell
-        .attr("y", runningYIcon - (bellHeight * 0.15))
+        .attr("y", runningYIcon - (bellHeight * 0.12))
         .attr("width", iconSize)
         .attr("height", iconSize);
 
@@ -157,8 +157,8 @@ const BellDiagram: React.FC = () => {
 
       // Main label (directly above bell)
       // Responsive font size and bell positioning
-      const labelFontSize = isMobile ? 9 : isTablet ? 12 : 16;
-      const labelYOffset = -bellHeight * 0.85;
+      const labelFontSize = isMobile ? 9 : isTablet ? 16 : 16;
+      const labelYOffset = -bellHeight * 0.90;
 
       // Dynamic width/height for foreignObject label
       const labelWidth = bellWidth * (isMobile ? 0.9 : 0.7);
