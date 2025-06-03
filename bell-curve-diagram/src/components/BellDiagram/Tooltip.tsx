@@ -9,13 +9,13 @@ interface TooltipProps {
   absoluteX: number;
   absoluteY: number;
   item: Item;
+  direction: "left" | "right";
   onClose: () => void;
 }
 
-const Tooltip: React.FC<TooltipProps> = ({ x, y, absoluteX, absoluteY, item, onClose }) => {
+const Tooltip: React.FC<TooltipProps> = ({ x, y, absoluteX, absoluteY, item, direction, onClose }) => {
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState<{ top: number; left: number }>({ top: y, left: x });
-  const [arrowClass, setArrowClass] = useState<string>("");
 
   useEffect(() => {
     if (!tooltipRef.current) return;
@@ -26,38 +26,27 @@ const Tooltip: React.FC<TooltipProps> = ({ x, y, absoluteX, absoluteY, item, onC
 
     const container = tooltipRef.current.parentElement;
     const containerRect = container?.getBoundingClientRect();
-
     if (!containerRect) return;
 
-    let top = absoluteY - containerRect.top + padding;
-    let left = absoluteX - containerRect.left + padding;
-    let arrow = "";
+    let top = absoluteY - containerRect.top - tooltipHeight / 2;
+    let left;
 
-    if (absoluteY + tooltipHeight + padding > containerRect.bottom) {
-      // Not enough space below, open above
-      top = absoluteY - containerRect.top - tooltipHeight - padding;
-      arrow = "arrow-bottom";
-    }
-
-    if (absoluteX + tooltipWidth + padding > containerRect.right) {
-      left = absoluteX - containerRect.left - tooltipWidth - padding;
-      arrow += " arrow-right";
+    if (direction === "right") {
+      left = absoluteX - containerRect.left + padding;
     } else {
-      arrow += " arrow-left";
+      left = absoluteX - containerRect.left - tooltipWidth - padding;
     }
 
-    // Safe zone inside parent
+    // Clamp vertical position inside parent
     top = Math.max(padding, Math.min(top, containerRect.height - tooltipHeight - padding));
-    left = Math.max(padding, Math.min(left, containerRect.width - tooltipWidth - padding));
 
     setPosition({ top, left });
-    setArrowClass(arrow.trim());
-  }, [absoluteX, absoluteY]);
+  }, [absoluteX, absoluteY, direction]);
 
   return (
     <div
       ref={tooltipRef}
-      className={`${styles.tooltip} ${styles[arrowClass]}`}
+      className={`${styles.tooltip} ${styles[direction]}`}
       style={{ top: position.top, left: position.left, width: 290 }}
       onClick={onClose}
     >

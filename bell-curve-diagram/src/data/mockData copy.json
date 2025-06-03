@@ -1,6 +1,6 @@
 {
   "Ideation": {
-    "icon": "/img/subcCategoryPNG_5.png",
+    "icon": "subcategory_4",
     "color": "#F9C500",
     "textColor": "#000000",
     "items": [
@@ -55,7 +55,7 @@
     ]
   },
   "Design": {
-    "icon": "/img/subcCategoryPNG_9.png",
+    "icon": "subcategory_6",
     "color": "#D69A63",
     "textColor": "#000000",
     "items": [
@@ -134,7 +134,7 @@
     ]
   },
   "POCs": {
-    "icon": "/img/subcCategoryPNG_7.png",
+    "icon": "subcategory_8",
     "color": "#D74C3F",
     "textColor": "#000000",
     "items": [
@@ -177,7 +177,7 @@
     ]
   },
   "App Dev": {
-    "icon": "/img/subcCategoryPNG_4.png",
+    "icon": "subcategory_3",
     "color": "#C4304C",
     "textColor": "#000000",
     "items": [
@@ -280,7 +280,7 @@
     ]
   }, 
    "APIs": {
-    "icon": "/img/subcCategoryPNG_8.png",
+    "icon": "subcategory_1",
     "color": "#D07F80",
     "textColor": "#000000",
     "items": [
@@ -383,7 +383,7 @@
     ]
   },
   "Testing": {
-    "icon": "/img/subcCategoryPNG_3.png",
+    "icon": "subcategory_9",
     "color": "#53E5BA",
     "textColor": "#000000",
     "items": [
@@ -510,7 +510,7 @@
     ]
   },
   "Dashboards & Visualizations": {
-    "icon": "/img/subcCategoryPNG_1.png",
+    "icon": "subcategory_2",
     "color": "#29D3EC",
     "textColor": "#000000",
     "items": [
@@ -553,7 +553,7 @@
     ]
   },
   "Data Science": {
-    "icon": "/img/subcCategoryPNG_6.png",
+    "icon": "subcategory_7",
     "color": "#1CB1E8",
     "textColor": "#000000",
     "items": [
@@ -656,7 +656,7 @@
     ]
   },
   "AI": {
-    "icon": "/img/subcCategoryPNG_2.png",
+    "icon": "subcategory_5",
     "color": "#1655B3",
     "textColor": "#000000",
     "items": [
