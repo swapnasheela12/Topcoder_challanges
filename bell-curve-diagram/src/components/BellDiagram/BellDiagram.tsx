@@ -157,7 +157,7 @@ const BellDiagram: React.FC = () => {
 
       // Main label (directly above bell)
       // Responsive font size and bell positioning
-      const labelFontSize = isMobile ? 9 : isTablet ? 16 : 16;
+      const labelFontSize = isMobile ? 10 : isTablet ? 16 : 16;
       const labelYOffset = -bellHeight * 0.90;
 
       // Dynamic width/height for foreignObject label
