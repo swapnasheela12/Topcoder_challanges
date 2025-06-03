@@ -129,12 +129,13 @@ const BellDiagram: React.FC = () => {
       const runningYIcon = -bellHeight + verticalPadding + (bellHeight - verticalPadding * 2 - totalHeight) / 2 + downwardShift;
      
       // ---- Add image icon at the top of textGroup ----
-      const iconSize = isMobile ? 10 : isTablet ? 20 : 30;  // responsive icon size
+      const iconSize = isMobile ? 20 : isTablet ? 20 : 30;  // responsive icon size
       textGroup.append("image")
         .attr("class", "subcategory-icon")
         .attr("href", categoryData.icon)
         .attr("x", -iconSize / 2)
-        .attr("y", runningYIcon - 80)  // slight downward offset from top of bell
+        // .attr("y", runningYIcon - 80)  // slight downward offset from top of bell
+        .attr("y", runningYIcon - (bellHeight * 0.15))
         .attr("width", iconSize)
         .attr("height", iconSize);
 
