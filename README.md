@@ -40,7 +40,7 @@ The visualization supports both desktop hover and mobile click interactions with
 ```
 **Install & Run**
 # Clone repository
-git clone https://github.com/swapnasheela12/Topcoder_challanges.git
+git clone https://github.com/swapnasheela12/React_NextJs_D3_challanges.git
 
 # Install dependencies
 npm install
