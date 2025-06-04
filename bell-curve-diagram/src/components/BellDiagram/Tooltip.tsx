@@ -74,14 +74,20 @@ const Tooltip: React.FC<TooltipProps> = ({
           <li key={index} className={styles.linkItem}>
             <span className={styles.index}>{String(index + 1).padStart(2, "0")}.</span>
             <div className={styles.linkContent}>
-              <a href={link.url} target="_blank" rel="noopener noreferrer" className={styles.linkText}>
-                {link.text}
-              </a>
+              <div className={styles.linkRow}>
+                <a href={link.url} target="_blank" rel="noopener noreferrer" className={styles.linkText}>
+                  {link.text}
+                </a>
+                <a href={link.url} target="_blank" rel="noopener noreferrer" className={styles.iconLink}>
+                  <img src="/img/share_icon.png" alt="Open" className={styles.iconImage} />
+                </a>
+              </div>
               <div className={styles.linkDesc}>{link.desc}</div>
             </div>
           </li>
         ))}
       </ul>
+
     </div>
   );
 };
