@@ -450,116 +450,116 @@ const BellDiagram: React.FC = () => {
         .text(cat);
 
       group.on("mouseenter", () => {
-       if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+        if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
 
-hoverTimerRef.current = setTimeout(() => {
-  group.node()?.parentNode?.appendChild(group.node()!);
-  bellPath.attr("filter", "url(#bellShadow)");
-  zoomableGroup.transition().duration(300).ease(d3.easeCubicOut).attr("transform", `scale(${zoomScale})`);
+        hoverTimerRef.current = setTimeout(() => {
+          group.node()?.parentNode?.appendChild(group.node()!);
+          bellPath.attr("filter", "url(#bellShadow)");
+          zoomableGroup.transition().duration(300).ease(d3.easeCubicOut).attr("transform", `scale(${zoomScale})`);
 
-  // ✅ DRAW SUBCATEGORY TEXT & IMAGE INSIDE BELL
-  const textGroup = group.append("g").attr("class", "subcategory-text");
-  const items = categoryData.items;
-  const fontSize = isMobile ? 8 : isTablet ? 12 : 16;
-  const lineHeight = fontSize * 1.1;
+          // ✅ DRAW SUBCATEGORY TEXT & IMAGE INSIDE BELL
+          const textGroup = group.append("g").attr("class", "subcategory-text");
+          const items = categoryData.items;
+          const fontSize = isMobile ? 8 : isTablet ? 12 : 16;
+          const lineHeight = fontSize * 1.1;
 
-  let totalLines = 0;
-  items.forEach(item => totalLines += Math.ceil(item.title.length / 18));
-  const totalTextHeight = totalLines * lineHeight;
+          let totalLines = 0;
+          items.forEach(item => totalLines += Math.ceil(item.title.length / 18));
+          const totalTextHeight = totalLines * lineHeight;
 
-  const iconSize = isMobile ? 20 : isTablet ? 30 : 35;
-  const iconMarginTop = 10;
-  const iconMarginBottom = 50;
-  const totalBlockHeight = iconMarginTop + iconSize + iconMarginBottom + totalTextHeight;
+          const iconSize = isMobile ? 20 : isTablet ? 30 : 35;
+          const iconMarginTop = 10;
+          const iconMarginBottom = 50;
+          const totalBlockHeight = iconMarginTop + iconSize + iconMarginBottom + totalTextHeight;
 
-  const downwardShift = bellHeight * 0.08;
-  const availableSpace = bellHeight * 0.75;
-  const startY = -bellHeight + (bellHeight - availableSpace) / 2 + (availableSpace - totalBlockHeight) / 2 + downwardShift;
+          const downwardShift = bellHeight * 0.08;
+          const availableSpace = bellHeight * 0.75;
+          const startY = -bellHeight + (bellHeight - availableSpace) / 2 + (availableSpace - totalBlockHeight) / 2 + downwardShift;
 
-  textGroup.append("image")
-    .attr("href", categoryData.icon)
-    .attr("x", -iconSize / 2)
-    .attr("y", startY + iconMarginTop)
-    .attr("width", iconSize)
-    .attr("height", iconSize);
+          textGroup.append("image")
+            .attr("href", categoryData.icon)
+            .attr("x", -iconSize / 2)
+            .attr("y", startY + iconMarginTop)
+            .attr("width", iconSize)
+            .attr("height", iconSize);
 
-  let runningY = startY + iconMarginTop + iconSize + iconMarginBottom;
+          let runningY = startY + iconMarginTop + iconSize + iconMarginBottom;
 
-  const availableWidthAtY = (yPosition: number) => {
-    const relativeY = Math.abs(yPosition) / bellHeight;
-    const minWidth = bellWidth * 0.4;
-    const maxWidth = bellWidth * 1.09;
-    return minWidth + (maxWidth - minWidth) * (1 - relativeY);
-  };
+          const availableWidthAtY = (yPosition: number) => {
+            const relativeY = Math.abs(yPosition) / bellHeight;
+            const minWidth = bellWidth * 0.4;
+            const maxWidth = bellWidth * 1.09;
+            return minWidth + (maxWidth - minWidth) * (1 - relativeY);
+          };
 
-  items.forEach(item => {
-    const availableWidth = availableWidthAtY(runningY);
-    const text = textGroup.append("text")
-      .attr("x", 0)
-      .attr("y", runningY)
-      .attr("text-anchor", "middle")
-      .attr("fill", "#fff")
-      .attr("font-size", fontSize)
-      .style("font-family", "'Nunito-Regular', sans-serif");
+          items.forEach(item => {
+            const availableWidth = availableWidthAtY(runningY);
+            const text = textGroup.append("text")
+              .attr("x", 0)
+              .attr("y", runningY)
+              .attr("text-anchor", "middle")
+              .attr("fill", "#fff")
+              .attr("font-size", fontSize)
+              .style("font-family", "'Nunito-Regular', sans-serif");
 
-    const linesWrapped = wrapText(text, `• ${item.title}`, availableWidth);
-    runningY += linesWrapped * lineHeight;
-  });
+            const linesWrapped = wrapText(text, `• ${item.title}`, availableWidth);
+            runningY += linesWrapped * lineHeight;
+          });
 
-  // ✅ CALCULATE TOOLTIP POSITION AFTER SUBCATEGORY DRAWING
-  const tooltipWidth = 290;
-  const containerRect = containerRef.current!.getBoundingClientRect();
-  const svgRect = svgRef.current!.getBoundingClientRect();
+          // ✅ CALCULATE TOOLTIP POSITION AFTER SUBCATEGORY DRAWING
+          const tooltipWidth = 290;
+          const containerRect = containerRef.current!.getBoundingClientRect();
+          const svgRect = svgRef.current!.getBoundingClientRect();
 
-  const bellCenterX = svgRect.left + x;
-  const zoomOffsetY = bellHeight * (zoomScale - 1) / 2;
-  const verticalAdjustment = bellHeight * 0.10;
-  const bellCenterY = svgRect.top + (height - bellHeight) + (bellHeight / 2) - zoomOffsetY + verticalAdjustment;
+          const bellCenterX = svgRect.left + x;
+          const zoomOffsetY = bellHeight * (zoomScale - 1) / 2;
+          const verticalAdjustment = bellHeight * 0.10;
+          const bellCenterY = svgRect.top + (height - bellHeight) + (bellHeight / 2) - zoomOffsetY + verticalAdjustment;
 
-  const containerCenterX = containerRect.left + containerRect.width / 2;
-  const tooltipLeft = (containerRect.width - tooltipWidth) / 2;
-  const bellXInContainer = bellCenterX - containerRect.left;
-  const arrowOffset = bellXInContainer - tooltipLeft;
+          const containerCenterX = containerRect.left + containerRect.width / 2;
+          const tooltipLeft = (containerRect.width - tooltipWidth) / 2;
+          const bellXInContainer = bellCenterX - containerRect.left;
+          const arrowOffset = bellXInContainer - tooltipLeft;
 
-  const clickedItem = categoryData.items[0];
+          const clickedItem = categoryData.items[0];
 
-  setTooltip({
-    x: bellCenterX - containerRect.left,
-    y: bellCenterY - containerRect.top,
-    absoluteX: bellCenterX,
-    absoluteY: bellCenterY,
-    item: clickedItem,
-    direction: isMobile ? "top" : (bellCenterX < containerCenterX ? "right" : "left"),
-    arrowOffset: isMobile ? arrowOffset : 0
-  });
+          setTooltip({
+            x: bellCenterX - containerRect.left,
+            y: bellCenterY - containerRect.top,
+            absoluteX: bellCenterX,
+            absoluteY: bellCenterY,
+            item: clickedItem,
+            direction: isMobile ? "top" : (bellCenterX < containerCenterX ? "right" : "left"),
+            arrowOffset: isMobile ? arrowOffset : 0
+          });
 
-  if (timerRef.current) clearTimeout(timerRef.current);
-  timerRef.current = setTimeout(() => {
-    setTooltip(null);
-    timerRef.current = null;
-  }, 4000);
-}, 100);
+          if (timerRef.current) clearTimeout(timerRef.current);
+          timerRef.current = setTimeout(() => {
+            setTooltip(null);
+            timerRef.current = null;
+          }, 4000);
+        }, 100);
 
       });
 
-     group.on("mouseleave", () => {
-  if (hoverTimerRef.current) {
-    clearTimeout(hoverTimerRef.current);
-    hoverTimerRef.current = null;
-  }
-  setTimeout(() => {
-    if (!isTooltipHovered) {
-      zoomableGroup.transition()
-        .duration(300)
-        .ease(d3.easeCubicOut)
-        .attr("transform", "scale(1)");
+      group.on("mouseleave", () => {
+        if (hoverTimerRef.current) {
+          clearTimeout(hoverTimerRef.current);
+          hoverTimerRef.current = null;
+        }
+        setTimeout(() => {
+          if (!isTooltipHovered) {
+            zoomableGroup.transition()
+              .duration(300)
+              .ease(d3.easeCubicOut)
+              .attr("transform", "scale(1)");
 
-      bellPath.attr("filter", null);
-      group.select(".subcategory-text").remove(); // ✅ remove subcategory text group on mouseleave
-      clearTooltip();
-    }
-  }, 100);
-});
+            bellPath.attr("filter", null);
+            group.select(".subcategory-text").remove(); // ✅ remove subcategory text group on mouseleave
+            clearTooltip();
+          }
+        }, 100);
+      });
 
     });
 
