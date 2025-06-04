@@ -259,7 +259,7 @@ const BellDiagram: React.FC = () => {
               .ease(d3.easeCubicOut)
               .attr("transform", "scale(1)");
 
-            bellPath.attr("filter", null);
+            bellPath.attr("filter", null).attr("opacity", 0.6);
             group.select(".subcategory-text").remove();
             clearTooltip();
           }
