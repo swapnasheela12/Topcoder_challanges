@@ -20,6 +20,26 @@
     padding: 16px 16px;
   }
 
+  &.top::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    // left: var(--arrow-offset, 50%);
+    left: calc(var(--arrow-offset, 50%) - 10px);  /* fully dynamic */
+    margin-left: -10px;
+    border-width: 10px 10px 0 10px;
+    border-style: solid;
+    border-color: #0F172A transparent transparent transparent;
+    // content: "";
+    // position: absolute;
+    // bottom: -10px;
+    // left: 50%;
+    // transform: translateY(-50%);
+    // border-width: 10px 0 10px 12px;
+    // border-style: solid;
+    // border-color: transparent transparent transparent #0F172A;
+  }
+  
   &.left::after {
     content: "";
     position: absolute;
