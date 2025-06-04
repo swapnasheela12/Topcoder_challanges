@@ -149,8 +149,11 @@ const Tooltip: React.FC<TooltipProps> = ({
       left = absoluteX - containerRect.left - tooltipWidth - padding;
       top = absoluteY - containerRect.top - tooltipHeight / 2;
     } else if (direction === "top") {
-      top = 30;
-      left = (containerRect.width - tooltipWidth) / 2;
+      top = 40;
+      left = absoluteX - containerRect.left - tooltipWidth / 2;
+  
+  // Optional: clamp if near edges to avoid overflow
+  left = Math.max(10, Math.min(left, containerRect.width - tooltipWidth - 10));
     }
 
     setPosition({ top, left });
