@@ -122,6 +122,7 @@ const BellDiagram: React.FC = () => {
         .attr("d", d3.line().curve(d3.curveBasis)(createBellData(bellWidth, bellHeight) as [number, number][]))
         .attr("fill", categoryData.color)
         .attr("stroke-width", 2)
+        .attr("opacity", 0.6)
         .style("cursor", "pointer");
 
       // Draw main label text on top of each bell
@@ -156,7 +157,7 @@ const BellDiagram: React.FC = () => {
 
         hoverTimerRef.current = setTimeout(() => {
           group.node()?.parentNode?.appendChild(group.node()!); // bring hovered bell to top layer
-          bellPath.attr("filter", "url(#bellShadow)");
+          bellPath.attr("filter", "url(#bellShadow)").attr("opacity", 1);
           zoomableGroup.transition().duration(300).ease(d3.easeCubicOut).attr("transform", `scale(${zoomScale})`);
 
           /** ✅ Draw subcategory text inside bell shape **/
